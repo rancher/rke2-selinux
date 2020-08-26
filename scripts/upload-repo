@@ -10,8 +10,11 @@ if [ -z "$RPM_CHANNEL" ]; then
   exit 1
 fi
 
-TARGET_S3_PATH="rke2/$RPM_CHANNEL/common/centos/7/noarch"
-TARGET_SOURCE_S3_PATH="rke2/$RPM_CHANNEL/common/centos/7/source"
+TARGET_EL7_S3_PATH="rke2/$RPM_CHANNEL/common/centos/7/noarch"
+TARGET_EL7_SOURCE_S3_PATH="rke2/$RPM_CHANNEL/common/centos/7/source"
+
+TARGET_EL8_S3_PATH="rke2/$RPM_CHANNEL/common/centos/8/noarch"
+TARGET_EL8_SOURCE_S3_PATH="rke2/$RPM_CHANNEL/common/centos/8/source"
 
 case "$RPM_CHANNEL" in
   "testing")
@@ -51,5 +54,9 @@ case "$RPM_CHANNEL" in
     ;;
 esac
 
-rpm-s3 --bucket $AWS_S3_BUCKET -p $TARGET_S3_PATH dist/rpm/**/rke2-*.rpm
-rpm-s3 --bucket $AWS_S3_BUCKET -p $TARGET_SOURCE_S3_PATH dist/source/rke2-*src.rpm
+rpm-s3 --bucket $AWS_S3_BUCKET -p $TARGET_EL7_S3_PATH dist/rpm/**/rke2-*.rpm
+rpm-s3 --bucket $AWS_S3_BUCKET -p $TARGET_EL7_SOURCE_S3_PATH dist/source/rke2-*src.rpm
+
+rpm-s3 --bucket $AWS_S3_BUCKET -p $TARGET_EL8_S3_PATH dist/rpm/**/rke2-*.rpm
+rpm-s3 --bucket $AWS_S3_BUCKET -p $TARGET_EL8_SOURCE_S3_PATH dist/source/rke2-*src.rpm
+
