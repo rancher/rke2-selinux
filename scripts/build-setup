@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e -x
 
-yum install -y yum-utils rpm-build
+yum install -y yum-utils rpm-build container-selinux selinux-policy-devel
 yum-builddep -y container-selinux
