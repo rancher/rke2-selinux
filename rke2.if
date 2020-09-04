@@ -24,3 +24,28 @@ interface(`rke2_filetrans_named_content',`
     filetrans_pattern($1, var_log_t, container_log_t, dir, "containers")
 
 ')
+
+template(`rke2_service_domain_template',`
+    container_domain_template($1)
+    virt_sandbox_domain($1_t)
+
+    gen_require(`
+        attribute container_domain, container_net_domain;
+        attribute sandbox_net_domain;
+    ')
+    typeattribute $1_t container_domain, container_net_domain, sandbox_net_domain;
+
+    virt_default_capabilities($1_t)
+    kernel_read_messages($1_t)
+    logging_send_syslog_msg($1_t)
+
+    corenet_unconfined($1_t)
+    corenet_tcp_bind_generic_node($1_t)
+    corenet_udp_bind_generic_node($1_t)
+    corenet_raw_bind_generic_node($1_t)
+    corenet_tcp_sendrecv_all_ports($1_t)
+    corenet_udp_sendrecv_all_ports($1_t)
+    corenet_udp_bind_all_ports($1_t)
+    corenet_tcp_bind_all_ports($1_t)
+    corenet_tcp_connect_all_ports($1_t)
+')
