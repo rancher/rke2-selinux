@@ -22,7 +22,7 @@ restorecon -R /var/run/flannel
 
 Name:   rke2-selinux
 Version:	%{rke2_selinux_version}
-Release:	%{rke2_selinux_release}.el7_8
+Release:	%{rke2_selinux_release}.el7
 Summary:	SELinux policy module for rke2
 
 Group:	System Environment/Base		
@@ -35,6 +35,9 @@ Source1:	rke2.if
 Requires: policycoreutils, libselinux-utils
 Requires(post): selinux-policy-base >= %{selinux_policyver}, policycoreutils, container-selinux >= %{container_policyver}
 Requires(postun): policycoreutils
+
+Conflicts: k3s-selinux
+
 BuildArch: noarch
 
 %description

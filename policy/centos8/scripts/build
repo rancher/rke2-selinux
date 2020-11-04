@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e -x
+
+cd $(dirname $0)/..
+. ./scripts/version
+
+make -f /usr/share/selinux/devel/Makefile rke2.pp
+
+rpmbuild \
+    --define "rke2_selinux_version ${RPM_VERSION}" \
+    --define "rke2_selinux_release ${RPM_RELEASE}" \
+    --define "_sourcedir $PWD" \
+    --define "_specdir $PWD" \
+    --define "_builddir $PWD" \
+    --define "_srcrpmdir ${PWD}/dist/source" \
+    --define "_buildrootdir $PWD/.build" \
+    --define "_rpmdir ${PWD}/dist" \
+    -ba rke2-selinux.spec
+
+mkdir -p /source/dist/centos8
+cp -r dist/* /source/dist/centos8
