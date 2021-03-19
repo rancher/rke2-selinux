@@ -26,6 +26,7 @@ allow rke2_service_db_t container_var_lib_t:file { map };
 gen_require(`
         type container_runtime_t, unconfined_service_t;
         type container_log_t;
+        type syslogd_var_run_t;
         class dir { read search };
         class file { open read };
         class lnk_file { getattr read };
@@ -39,3 +40,5 @@ allow rke_logreader_t container_log_t:file { getattr open read };
 allow rke_logreader_t container_var_lib_t:dir search;
 allow rke_logreader_t container_var_lib_t:file { getattr open read };
 allow rke_logreader_t container_var_lib_t:lnk_file { getattr read };
+allow rke_logreader_t syslogd_var_run_t:dir read;
+allow rke_logreader_t syslogd_var_run_t:file { getattr open read };
