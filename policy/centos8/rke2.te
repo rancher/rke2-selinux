@@ -19,22 +19,3 @@ rke2_service_domain_template(rke2_service_db)
 container_manage_lib_dirs(rke2_service_db_t)
 container_manage_lib_files(rke2_service_db_t)
 allow rke2_service_db_t container_var_lib_t:file { map };
-
-########################
-# type rke_logreader_t #
-########################
-gen_require(`
-        type container_runtime_t, unconfined_service_t;
-        type container_log_t;
-        class dir { read search };
-        class file { open read };
-        class lnk_file { getattr read };
-')
-container_domain_template(rke_logreader)
-virt_sandbox_domain(rke_logreader_t)
-corenet_unconfined(rke_logreader_t)
-allow rke_logreader_t container_log_t:dir { open read search };
-allow rke_logreader_t container_log_t:lnk_file { getattr read };
-allow rke_logreader_t container_log_t:file { getattr open read };
-allow rke_logreader_t container_var_lib_t:dir search;
-allow rke_logreader_t container_var_lib_t:file { getattr open read };
