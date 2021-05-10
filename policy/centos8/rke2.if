@@ -46,4 +46,6 @@ template(`rke2_service_domain_template',`
     corenet_udp_bind_all_ports($1_t)
     corenet_tcp_bind_all_ports($1_t)
     corenet_tcp_connect_all_ports($1_t)
+
+    miscfiles_read_all_certs($1_t)
 ')
