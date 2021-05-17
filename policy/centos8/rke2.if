@@ -20,7 +20,7 @@ interface(`rke2_filetrans_named_content',`
     filetrans_pattern($1, var_lib_t, container_var_lib_t, dir, "kubelet")
     filetrans_pattern($1, var_log_t, container_log_t, dir, "pods")
     filetrans_pattern($1, var_log_t, container_log_t, dir, "containers")
-
+    filetrans_pattern($1, container_var_lib_t, container_log_t, dir, "logs")
 ')
 
 template(`rke2_service_domain_template',`
@@ -48,4 +48,6 @@ template(`rke2_service_domain_template',`
     corenet_tcp_connect_all_ports($1_t)
 
     miscfiles_read_all_certs($1_t)
+
+    admin_pattern($1_t, container_log_t)
 ')

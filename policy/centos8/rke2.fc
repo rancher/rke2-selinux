@@ -6,7 +6,6 @@
 /usr/local/bin/rke2                                                 --  gen_context(system_u:object_r:container_runtime_exec_t,s0)
 /var/lib/cni(/.*)?                                                      gen_context(system_u:object_r:container_var_lib_t,s0)
 /var/lib/rancher/rke2(/.*)?                                             gen_context(system_u:object_r:container_var_lib_t,s0)
-/var/log/audit(/.*)?                                                    gen_context(system_u:object_r:container_var_lib_t,s0)
 /var/lib/rancher/rke2/data(/.*)?                                        gen_context(system_u:object_r:container_runtime_exec_t,s0)
 /var/lib/rancher/rke2/agent/containerd/[^/]*/snapshots              -d  gen_context(system_u:object_r:container_share_t,s0)
 /var/lib/rancher/rke2/agent/containerd/[^/]*/snapshots/[^/]*        -d  gen_context(system_u:object_r:container_share_t,s0)
@@ -18,3 +17,4 @@
 /var/lib/kubelet/pods(/.*)?                                             gen_context(system_u:object_r:container_file_t,s0)
 /var/log/containers(/.*)?                                               gen_context(system_u:object_r:container_log_t,s0)
 /var/log/pods(/.*)?                                                     gen_context(system_u:object_r:container_log_t,s0)
+/var/lib/rancher/rke2/server/logs(/.*)?                                 gen_context(system_u:object_r:container_log_t,s0)
