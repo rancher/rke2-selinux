@@ -18,7 +18,7 @@ restorecon -R /var/run/flannel
 
 
 %define selinux_policyver 3.13.1-252
-%define container_policyver 2.144.0-1
+%define container_policyver 2.167.0-1
 
 Name:   rke2-selinux
 Version:	%{rke2_selinux_version}
@@ -33,7 +33,7 @@ Source1:	rke2.if
 
 
 Requires: policycoreutils, libselinux-utils
-Requires(post): selinux-policy-base >= %{selinux_policyver}, policycoreutils, container-selinux >= %{container_policyver}
+Requires(post): selinux-policy-base >= %{selinux_policyver}, policycoreutils, container-selinux >= 2:%{container_policyver}
 Requires(postun): policycoreutils
 
 Conflicts: k3s-selinux
