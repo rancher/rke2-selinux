@@ -1,3 +1,4 @@
-.dapper
 /dist
-/.vagrant/
+*.rpm
+.dapper
+.vagrant/

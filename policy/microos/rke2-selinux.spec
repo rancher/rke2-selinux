@@ -15,14 +15,12 @@ restorecon -R /var/lib/rancher; \
 restorecon -R /var/run/k3s; \
 restorecon -R /var/run/flannel
 
-%define selinux_policyver 3.13.1-252
-%define container_policyver 2.107-3
-%define container_policy_epoch 2
-%define container_policy_schism 2.164.2
+%define selinux_policyver 20210716-3.1
+%define container_policyver 2.164.2-1.1
 
 Name:       rke2-selinux
 Version:    %{rke2_selinux_version}
-Release:    %{rke2_selinux_release}.el7
+Release:    %{rke2_selinux_release}.sle
 Summary:    SELinux policy module for rke2
 
 Group:      System Environment/Base
@@ -32,17 +30,15 @@ Source0:    rke2.pp
 Source1:    rke2.if
 
 BuildArch:      noarch
-BuildRequires:  container-selinux >= %{container_policy_epoch}:%{container_policyver}
-BuildRequires:  container-selinux < %{container_policy_epoch}:%{container_policy_schism}
+BuildRequires:  container-selinux >= %{container_policyver}
 BuildRequires:  git
 BuildRequires:  selinux-policy >= %{selinux_policyver}
 BuildRequires:  selinux-policy-devel >= %{selinux_policyver}
 
-Requires: policycoreutils, libselinux-utils
+Requires: policycoreutils, selinux-tools
 Requires(post): selinux-policy-base >= %{selinux_policyver}
 Requires(post): policycoreutils
-Requires(post): container-selinux >= %{container_policy_epoch}:%{container_policyver}
-Requires(post): container-selinux < %{container_policy_epoch}:%{container_policy_schism}
+Requires(post): container-selinux >= %{container_policyver}
 Requires(postun): policycoreutils
 
 Provides: %{name} = %{version}-%{release}

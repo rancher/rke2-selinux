@@ -1,6 +1,11 @@
 # rke2-selinux
 RKE2 selinux policy repository
 
+## Signing Keys
+
+- https://rpm.rancher.io/public.key
+- https://rpm-testing.rancher.io/public.key
+
 ## Versioning/Tagging
 
 The version parsing logic for `rancher/rke2-selinux` expects tags to be of a certain format (that directly correlates to RPM naming)
