@@ -3,6 +3,9 @@
 # commented items are lines retained for parity when comparing policy between target distributions.
 # these are commented because they will cause conflict and/or crash when attempting to install with upstream
 # container-selinux: https://github.com/containers/container-selinux/pull/140/files
+#
+# Some of these items were later removed by upstream and have been restored to this package:
+# https://github.com/containers/container-selinux/pull/162
 
 /etc/systemd/system/rke2.*                                          --  gen_context(system_u:object_r:container_unit_file_t,s0)
 /lib/systemd/system/rke2.*                                          --  gen_context(system_u:object_r:container_unit_file_t,s0)
@@ -20,7 +23,7 @@
 /var/lib/rancher/rke2/agent/containerd/[^/]*/sandboxes(/.*)?            gen_context(system_u:object_r:container_share_t,s0)
 /var/lib/rancher/rke2/server/logs(/.*)?                                 gen_context(system_u:object_r:container_log_t,s0)
 #/var/run/flannel(/.*)?                                                  gen_context(system_u:object_r:container_var_run_t,s0)
-#/var/run/k3s(/.*)?                                                      gen_context(system_u:object_r:container_var_run_t,s0)
-#/var/run/k3s/containerd/[^/]*/sandboxes/[^/]*/shm(/.*)?                 gen_context(system_u:object_r:container_runtime_tmpfs_t,s0)
+/var/run/k3s(/.*)?                                                      gen_context(system_u:object_r:container_var_run_t,s0)
+/var/run/k3s/containerd/[^/]*/sandboxes/[^/]*/shm(/.*)?                 gen_context(system_u:object_r:container_runtime_tmpfs_t,s0)
 #/var/log/containers(/.*)?                                               gen_context(system_u:object_r:container_log_t,s0)
 #/var/log/pods(/.*)?                                                     gen_context(system_u:object_r:container_log_t,s0)
