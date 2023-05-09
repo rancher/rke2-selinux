@@ -27,7 +27,7 @@ interface(`rke2_filetrans_named_content',`
 ')
 
 template(`rke2_service_domain_template',`
-    container_domain_template($1)
+    container_domain_template($1, container)
     virt_sandbox_domain($1_t)
 
     gen_require(`
