@@ -17,5 +17,5 @@ rpmbuild \
     --define "_rpmdir ${PWD}/dist" \
     -ba rke2-selinux.spec
 
-mkdir -p /source/dist/microos
-cp -r dist/* /source/dist/microos
+mkdir -p /source/dist/slemicro
+cp -r dist/* /source/dist/slemicro

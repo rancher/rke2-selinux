@@ -18,7 +18,8 @@ restorecon -R /var/run/k3s; \
 restorecon -R /var/run/flannel
 
 %define selinux_policyver 20210716-3.1
-%define container_policyver 2.164.2-1.1
+%define container_policyver 2.167.0-1
+%define container_policyver_max 2.191.0-1
 
 Name:       rke2-selinux
 Version:    %{rke2_selinux_version}
@@ -40,7 +41,7 @@ BuildRequires:  selinux-policy-devel >= %{selinux_policyver}
 Requires: policycoreutils, selinux-tools
 Requires(post): selinux-policy-base >= %{selinux_policyver}
 Requires(post): policycoreutils
-Requires(post): container-selinux >= %{container_policyver}
+Requires(post): container-selinux >= %{container_policyver}, container-selinux < %{container_policyver_max}
 Requires(postun): policycoreutils
 
 Provides: %{name} = %{version}-%{release}

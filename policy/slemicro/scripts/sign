@@ -39,7 +39,7 @@ esac
 
 expect <<EOF
 set timeout 60
-spawn sh -c "rpmsign --addsign dist/microos/**/rke2-*.rpm"
+spawn sh -c "rpmsign --addsign dist/slemicro/**/rke2-*.rpm"
 expect "Enter pass phrase:"
 send -- "$PRIVATE_KEY_PASS_PHRASE\r"
 expect eof
