@@ -18,8 +18,8 @@ restorecon -R /var/run/k3s; \
 restorecon -R /var/run/flannel
 
 %define selinux_policyver 3.13.1-252
-%define container_policyver 2.167.0-1
-%define container_policy_epoch 2
+%define container_policyver 2.191.0-1
+%define container_policy_epoch 3
 
 Name:       rke2-selinux
 Version:    %{rke2_selinux_version}
