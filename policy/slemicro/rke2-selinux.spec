@@ -23,7 +23,7 @@ restorecon -R /var/run/flannel
 
 Name:       rke2-selinux
 Version:    %{rke2_selinux_version}
-Release:    %{rke2_selinux_release}.sle
+Release:    %{rke2_selinux_release}.slemicro
 Summary:    SELinux policy module for rke2
 
 Group:      System Environment/Base
