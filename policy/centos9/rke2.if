@@ -12,9 +12,10 @@ interface(`rke2_filetrans_named_content',`
         type container_var_run_t;
         type container_kvm_var_run_t;
         type var_lib_t;
+        type var_log_t;
     ')
 
-    container_filetrans_named_content($1)
+    #container_filetrans_named_content($1)
     files_pid_filetrans($1, container_var_run_t, dir, "rke2")
     filetrans_pattern($1, container_var_lib_t, container_runtime_exec_t, dir, "data")
     filetrans_pattern($1, container_runtime_exec_t, container_config_t, dir, "charts")
