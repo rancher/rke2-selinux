@@ -1,7 +1,8 @@
 policy_module(rke2, 1.0.0)
 
 gen_require(`
-    type container_runtime_t, unconfined_service_t;
+    type container_runtime_t, unconfined_service_t, iscsid_t;
+    class capability dac_override;
 ')
 rke2_filetrans_named_content(container_runtime_t)
 rke2_filetrans_named_content(unconfined_service_t)
@@ -19,3 +20,9 @@ rke2_service_domain_template(rke2_service_db)
 container_manage_lib_dirs(rke2_service_db_t)
 container_manage_lib_files(rke2_service_db_t)
 allow rke2_service_db_t container_var_lib_t:file { map };
+
+#########################
+# Longhorn ISCSID_T FIX #
+#########################
+# https://github.com/longhorn/longhorn/issues/5627#issuecomment-1577498183
+allow iscsid_t self:capability dac_override;
