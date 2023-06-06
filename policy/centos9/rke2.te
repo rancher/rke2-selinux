@@ -2,7 +2,7 @@ policy_module(rke2, 1.0.0)
 
 gen_require(`
     type container_runtime_t, unconfined_service_t, iscsid_t;
-	class capability dac_override;
+    class capability dac_override;
 ')
 rke2_filetrans_named_content(container_runtime_t)
 rke2_filetrans_named_content(unconfined_service_t)
