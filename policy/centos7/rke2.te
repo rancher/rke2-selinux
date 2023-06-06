@@ -1,7 +1,8 @@
 policy_module(rke2, 1.0.0)
 
 gen_require(`
-    type container_runtime_t, iptables_t, spc_t, unconfined_service_t;
+    type container_runtime_t, iptables_t, spc_t, unconfined_service_t, iscsid_t;
+	class capability dac_override;
     class bpf { map_create map_read map_write prog_load prog_run };
 ')
 rke2_filetrans_named_content(container_runtime_t)
@@ -26,3 +27,9 @@ allow rke2_service_db_t container_var_lib_t:file { map };
 ##########
 fs_list_cgroup_dirs(iptables_t)
 allow spc_t self:bpf { map_create map_read map_write prog_load prog_run };
+
+#########################
+# Longhorn ISCSID_T FIX #
+#########################
+# https://github.com/longhorn/longhorn/issues/5627#issuecomment-1577498183
+allow iscsid_t self:capability dac_override;
