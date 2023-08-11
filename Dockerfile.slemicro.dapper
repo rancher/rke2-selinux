@@ -1,9 +1,8 @@
-FROM centos:8
+FROM registry.suse.com/bci/bci-base:15.4
 
-RUN find /etc/yum.repos.d -type f -name '*.repo' -exec \
-    sed -i -e '/mirrorlist.*/d' -e 's%#baseurl=http://mirror.centos.org%baseurl=http://vault.centos.org%g' {} \;
-RUN yum install -y epel-release \
- && yum -y install container-selinux git rpm-build selinux-policy-devel yum-utils
+RUN zypper addrepo https://download.opensuse.org/repositories/security:/SELinux/15.4/security:SELinux.repo
+RUN zypper --gpg-auto-import-keys refresh
+RUN zypper in -y -n --force-resolution container-selinux git rpm-build selinux-policy-devel
 
 ENV DAPPER_SOURCE /source
 ENV DAPPER_OUTPUT ./dist
