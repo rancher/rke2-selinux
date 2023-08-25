@@ -13,7 +13,9 @@ interface(`rke2_filetrans_named_content',`
         type container_kvm_var_run_t;
         type var_lib_t;
         type var_log_t;
+        type rke2_tls_t;
     ')
+
     #container_filetrans_named_content($1)
     files_pid_filetrans($1, container_var_run_t, dir, "rke2")
     filetrans_pattern($1, container_var_lib_t, container_runtime_exec_t, dir, "data")
@@ -23,6 +25,7 @@ interface(`rke2_filetrans_named_content',`
     filetrans_pattern($1, var_log_t, container_log_t, dir, "pods")
     filetrans_pattern($1, var_log_t, container_log_t, dir, "containers")
     filetrans_pattern($1, container_var_lib_t, container_log_t, dir, "logs")
+    filetrans_pattern($1, container_var_lib_t, rke2_tls_t, dir, "tls")
 ')
 
 template(`rke2_service_domain_template',`
@@ -52,4 +55,5 @@ template(`rke2_service_domain_template',`
     miscfiles_read_all_certs($1_t)
 
     admin_pattern($1_t, container_log_t)
+    admin_pattern($1_t, rke2_tls_t)
 ')

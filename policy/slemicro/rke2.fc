@@ -21,6 +21,7 @@
 /var/lib/rancher/rke2/agent/containerd/[^/]*/snapshots/[^/]*/.*         <<none>>
 /var/lib/rancher/rke2/agent/containerd/[^/]*/sandboxes(/.*)?            gen_context(system_u:object_r:container_share_t,s0)
 /var/lib/rancher/rke2/server/logs(/.*)?                                 gen_context(system_u:object_r:container_log_t,s0)
+/var/lib/rancher/rke2/server/tls(/.*)?                                  gen_context(system_u:object_r:rke2_tls_t,s0)
 #/var/run/flannel(/.*)?                                                  gen_context(system_u:object_r:container_var_run_t,s0)
 #/var/run/k3s(/.*)?                                                      gen_context(system_u:object_r:container_var_run_t,s0)
 #/var/run/k3s/containerd/[^/]*/sandboxes/[^/]*/shm(/.*)?                 gen_context(system_u:object_r:container_runtime_tmpfs_t,s0)

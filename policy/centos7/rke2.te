@@ -33,3 +33,9 @@ allow spc_t self:bpf { map_create map_read map_write prog_load prog_run };
 #########################
 # https://github.com/longhorn/longhorn/issues/5627#issuecomment-1577498183
 allow iscsid_t self:capability dac_override;
+
+###################
+# type rke2_tls_t #
+###################
+type rke2_tls_t;
+container_file(rke2_tls_t);
