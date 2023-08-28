@@ -38,4 +38,4 @@ allow iscsid_t self:capability dac_override;
 # type rke2_tls_t #
 ###################
 type rke2_tls_t;
-container_file(rke2_tls_t);
+files_type(rke2_tls_t);
