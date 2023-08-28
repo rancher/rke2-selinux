@@ -27,3 +27,9 @@ allow rke2_service_db_t container_var_lib_t:file { map };
 #########################
 # https://github.com/longhorn/longhorn/issues/5627#issuecomment-1577498183
 allow iscsid_t self:capability dac_override;
+
+###################
+# type rke2_tls_t #
+###################
+type rke2_tls_t;
+container_file(rke2_tls_t);
