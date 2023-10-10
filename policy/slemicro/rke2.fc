@@ -7,6 +7,7 @@
 /etc/systemd/system/rke2.*                                          --  gen_context(system_u:object_r:container_unit_file_t,s0)
 /lib/systemd/system/rke2.*                                          --  gen_context(system_u:object_r:container_unit_file_t,s0)
 /usr/local/lib/systemd/system/rke2.*                                --  gen_context(system_u:object_r:container_unit_file_t,s0)
+/usr/lib/systemd/system/rke2.*                                --  gen_context(system_u:object_r:container_unit_file_t,s0)
 /usr/bin/rke2                                                       --  gen_context(system_u:object_r:container_runtime_exec_t,s0)
 /usr/local/bin/rke2                                                 --  gen_context(system_u:object_r:container_runtime_exec_t,s0)
 /opt/rke2/bin/rke2                                                  --  gen_context(system_u:object_r:container_runtime_exec_t,s0)
