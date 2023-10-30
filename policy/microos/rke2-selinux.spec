@@ -8,8 +8,8 @@ mkdir -p /var/lib/rancher/rke2/agent/containerd/io.containerd.snapshotter.v1.ove
 mkdir -p /var/lib/rancher/rke2/data; \
 mkdir -p /var/run/flannel; \
 mkdir -p /var/run/k3s; \
-restorecon -R -i /etc/systemd/system/rke2.service; \
-restorecon -R -i /usr/lib/systemd/system/rke2.service; \
+restorecon -R -i /etc/systemd/system/rke2*; \
+restorecon -R -i /usr/lib/systemd/system/rke2*; \
 restorecon -R /var/lib/cni; \
 restorecon -R /opt/cni; \
 restorecon -R /var/lib/kubelet; \
