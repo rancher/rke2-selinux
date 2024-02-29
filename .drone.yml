@@ -8,7 +8,7 @@ platform:
 
 steps:
   - name: Build EL7
-    image: rancher/dapper:v0.5.0
+    image: rancher/dapper:v0.6.0
     commands:
       - dapper -f Dockerfile.centos7.dapper policy/centos7/scripts/build
     volumes:
@@ -64,7 +64,7 @@ steps:
         - tag
 
   - name: GitHub Release EL7
-    image: ibuildthecloud/github-release:v0.0.1
+    image: plugins/github-release
     settings:
       api_key:
         from_secret: github_token
@@ -98,7 +98,7 @@ platform:
 
 steps:
   - name: Build EL8
-    image: rancher/dapper:v0.5.0
+    image: rancher/dapper:v0.6.0
     commands:
       - dapper -f Dockerfile.centos8.dapper policy/centos8/scripts/build
     volumes:
@@ -154,7 +154,7 @@ steps:
         - tag
 
   - name: GitHub Release EL8
-    image: ibuildthecloud/github-release:v0.0.1
+    image: plugins/github-release
     settings:
       api_key:
         from_secret: github_token
@@ -188,7 +188,7 @@ platform:
 
 steps:
   - name: Build EL9
-    image: rancher/dapper:v0.5.0
+    image: rancher/dapper:v0.6.0
     commands:
       - dapper -f Dockerfile.centos9.dapper policy/centos9/scripts/build
     volumes:
@@ -244,7 +244,7 @@ steps:
         - tag
 
   - name: GitHub Release EL9
-    image: ibuildthecloud/github-release:v0.0.1
+    image: plugins/github-release
     settings:
       api_key:
         from_secret: github_token
@@ -278,7 +278,7 @@ platform:
 
 steps:
   - name: Build SLE
-    image: rancher/dapper:v0.5.0
+    image: rancher/dapper:v0.6.0
     commands:
       - dapper -f Dockerfile.microos.dapper policy/microos/scripts/build
     volumes:
@@ -334,7 +334,7 @@ steps:
         - tag
 
   - name: GitHub Release SLE
-    image: ibuildthecloud/github-release:v0.0.1
+    image: plugins/github-release
     settings:
       api_key:
         from_secret: github_token
@@ -368,7 +368,7 @@ platform:
 
 steps:
   - name: Build SLE MICRO
-    image: rancher/dapper:v0.5.0
+    image: rancher/dapper:v0.6.0
     commands:
       - dapper -f Dockerfile.slemicro.dapper policy/slemicro/scripts/build
     volumes:
@@ -424,7 +424,7 @@ steps:
         - tag
 
   - name: GitHub Release SLE MICRO
-    image: ibuildthecloud/github-release:v0.0.1
+    image: plugins/github-release
     settings:
       api_key:
         from_secret: github_token
