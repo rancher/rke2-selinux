@@ -3,6 +3,7 @@
 %define rke2_relabel_files() \
 mkdir -p /var/lib/cni; \
 mkdir -p /opt/cni; \
+mkdir -p /etc/cni; \
 mkdir -p /var/lib/kubelet/pods; \
 mkdir -p /var/lib/rancher/rke2/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots; \
 mkdir -p /var/lib/rancher/rke2/data; \
@@ -12,6 +13,7 @@ restorecon -R -i /etc/systemd/system/rke2*; \
 restorecon -R -i /usr/lib/systemd/system/rke2*; \
 restorecon -R /var/lib/cni; \
 restorecon -R /opt/cni; \
+restorecon -R /etc/cni; \
 restorecon -R /var/lib/kubelet; \
 restorecon -R /var/lib/rancher; \
 restorecon -R /var/run/k3s; \
