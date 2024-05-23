@@ -4,7 +4,7 @@ on:
       - master
   pull_request:
 
-name: Build EL7
+name: Build RPMs
 permissions:
     contents: read
 jobs:
@@ -17,4 +17,40 @@ jobs:
     - name: build-rpm
       run: |
         make centos7-build
+  build-rpms-el8:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: build-rpm
+      run: |
+        make centos8-build
+  build-rpms-el9:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: build-rpm
+      run: |
+        make centos9-build
+  build-rpms-microos:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: build-rpm
+      run: |
+        make microos-build
+  build-rpms-slemicro:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: build-rpm
+      run: |
+        make slemicro-build
         
