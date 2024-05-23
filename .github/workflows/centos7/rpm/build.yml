@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+name: Build EL7
+permissions:
+    contents: read
+jobs:
+  build-rpm-el7:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: build-rpm-centos7-x86_64-amd64
+      run: |
+        make centos7-build
+        

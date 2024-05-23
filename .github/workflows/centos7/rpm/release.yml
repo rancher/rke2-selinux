@@ -1,0 +1,73 @@
+on:
+  push:
+    tags:
+    - "v*"
+
+name: Release EL7
+permissions:
+    contents: write
+    id-token: write
+jobs:
+  sign-release-rpm-centos7-x86_64-amd64:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: "Read secrets"
+      uses: rancher-eio/read-vault-secrets@main
+      with:
+        secrets: |
+          secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASSPHRASE ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASSPHRASE ;
+          secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
+          
+    - name: build-rpm-el7
+      run: |
+        make centos7-build
+    
+    - name: sign-rpm-el7
+      run: |
+        make centos7-sign
+      env:
+        PRIVATE_KEY: ${{ env.PRIAVATE_KEY }}
+        PRIVATE_KEY_PASSPHRASE: ${{ env.PRIVATE_KEY_PASSPHRASE }}
+        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIAVATE_KEY }}
+        TESTING_PRIVATE_KEY_PASSPHRASE: ${{ env.TESTING_PRIVATE_KEY_PASSPHRASE }}
+      
+    - name: upload-repo-el7
+      run: |
+        make centos7-upload-repo
+      env:
+        COMBARCH: x86_64-amd64
+        AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
+        TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
+        TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
+    
+    - name: checksum-artifacts-el7
+      run: |
+        make checksum dist/centos7/**/*.rpm
+      env:
+        DEST_DIR: dist/centos7/x86_64
+        CHECKSUM_METHOD: sha256
+        CHECKSUM_FILE: CHECKSUMsum-centos7-noarch.txt
+
+    - name: github-rpm-release-el7
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          "dist/centos7/**/*.rpm"
+      
+
+      
+        
