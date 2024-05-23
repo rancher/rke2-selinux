@@ -8,7 +8,7 @@ name: Build EL7
 permissions:
     contents: read
 jobs:
-  build-rpm-el7:
+  build-rpms-el7:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
