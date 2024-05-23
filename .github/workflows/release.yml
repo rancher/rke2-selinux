@@ -18,16 +18,16 @@ jobs:
       uses: rancher-eio/read-vault-secrets@main
       with:
         secrets: |
-          secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASSPHRASE ;
-          secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASSPHRASE ;
-          secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
+          secret/data/github/repo/${{ github.repository }}/aws-access-key-id/credentials token | AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/aws-s3-bucket/credentials token | AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/aws-secret-access-key/credentials token | AWS_SECRET_ACCESS_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private-key/credentials token | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private-key-pass-phrase/credentials token | PRIVATE_KEY_PASSPHRASE ;
+          secret/data/github/repo/${{ github.repository }}/testing-aws-s3-bucket/credentials token | TESTING_AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/testing-aws-access-key-id/credentials token | TESTING_AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/testing-aws-secret-access-key/credentials token | TESTING_AWS_SECRET_ACCESS_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing-private-key/credentials token | TESTING_PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing-private-key-pass-phrase/credentials token | TESTING_PRIVATE_KEY_PASSPHRASE ;
           
     - name: build-rpm-el7
       run: |
