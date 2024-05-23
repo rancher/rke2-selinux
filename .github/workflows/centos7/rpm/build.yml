@@ -14,7 +14,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: build-rpm-centos7-x86_64-amd64
+    - name: build-rpm
       run: |
         make centos7-build
         
