@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e -x
+
+cd $(dirname $0)/../../..
+
+CHECKSUM_METHOD=${CHECKSUM_METHOD:-sha256}
+CHECKSUM_FILE=${CHECKSUM_FILE:-CHECKSUMsum.txt}
+
+for filename in ${CHECKSUM_DIR}*; do
+   ${CHECKSUM_METHOD}sum $filename >> ${DEST_DIR}/${CHECKSUM_FILE}
+done
