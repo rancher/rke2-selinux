@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - master
-      - gha_migration
   pull_request:
 
 name: Build EL7
