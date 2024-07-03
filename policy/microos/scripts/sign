@@ -46,3 +46,12 @@ expect eof
 lassign [wait] _ _ _ code
 exit \$code
 EOF
+
+# checksum rpms
+pushd $(dirname $0)/..
+CHECKSUM_DIR=../../dist/microos/noarch CHECKSUM_FILE=CHECKSUMsum-microos-noarch.txt ./scripts/checksum
+popd
+# checksum srcrpms
+pushd $(dirname $0)/..
+CHECKSUM_DIR=../../dist/microos/source CHECKSUM_FILE=CHECKSUMsum-microos-source.txt ./scripts/checksum
+popd
