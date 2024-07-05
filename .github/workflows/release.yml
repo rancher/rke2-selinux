@@ -17,20 +17,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    # - name: "Read secrets"
-    #   uses: rancher-eio/read-vault-secrets@main
-    #   with:
-    #     secrets: |
-    #       secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
+    - name: "Read secrets"
+      uses: rancher-eio/read-vault-secrets@main
+      with:
+        secrets: |
+          secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
           
     - name: build-rpm-el7
       run: |
@@ -40,22 +40,22 @@ jobs:
       run: |
         make sign-centos7
       env:
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        PRIVATE_KEY_PASS_PHRASE: ${{ secrets.PRIVATE_KEY_PASS_PHRASE }}
-        TESTING_PRIVATE_KEY: ${{ secrets.TESTING_PRIVATE_KEY }}
-        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ secrets.TESTING_PRIVATE_KEY_PASS_PHRASE }}
+        PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
+        PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
+        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
+        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
       
     - name: upload-repo-el7
       run: |
         make upload-centos7
       env:
         COMBARCH: x86_64-amd64
-        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        TESTING_AWS_S3_BUCKET: ${{ secrets.TESTING_AWS_S3_BUCKET }}
-        TESTING_AWS_ACCESS_KEY_ID: ${{ secrets.TESTING_AWS_ACCESS_KEY_ID }}
-        TESTING_AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTING_AWS_SECRET_ACCESS_KEY }}
+        AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
+        TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
+        TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
 
     - name: github-rpm-release-el7
       run: |
@@ -66,20 +66,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    # - name: "Read secrets"
-    #   uses: rancher-eio/read-vault-secrets@main
-    #   with:
-    #     secrets: |
-    #       secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
+    - name: "Read secrets"
+      uses: rancher-eio/read-vault-secrets@main
+      with:
+        secrets: |
+          secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
           
     - name: build-rpm-el8
       run: |
@@ -89,22 +89,22 @@ jobs:
       run: |
         make sign-centos8
       env:
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        PRIVATE_KEY_PASS_PHRASE: ${{ secrets.PRIVATE_KEY_PASS_PHRASE }}
-        TESTING_PRIVATE_KEY: ${{ secrets.TESTING_PRIVATE_KEY }}
-        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ secrets.TESTING_PRIVATE_KEY_PASS_PHRASE }}
+        PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
+        PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
+        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
+        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
       
     - name: upload-repo-el8
       run: |
         make upload-centos8
       env:
         COMBARCH: x86_64-amd64
-        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        TESTING_AWS_S3_BUCKET: ${{ secrets.TESTING_AWS_S3_BUCKET }}
-        TESTING_AWS_ACCESS_KEY_ID: ${{ secrets.TESTING_AWS_ACCESS_KEY_ID }}
-        TESTING_AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTING_AWS_SECRET_ACCESS_KEY }}
+        AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
+        TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
+        TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
         
     - name: github-rpm-release-el8
       run: |
@@ -115,20 +115,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    # - name: "Read secrets"
-    #   uses: rancher-eio/read-vault-secrets@main
-    #   with:
-    #     secrets: |
-    #       secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
+    - name: "Read secrets"
+      uses: rancher-eio/read-vault-secrets@main
+      with:
+        secrets: |
+          secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
           
     - name: build-rpm-el9
       run: |
@@ -138,22 +138,22 @@ jobs:
       run: |
         make sign-centos9
       env:
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        PRIVATE_KEY_PASS_PHRASE: ${{ secrets.PRIVATE_KEY_PASS_PHRASE }}
-        TESTING_PRIVATE_KEY: ${{ secrets.TESTING_PRIVATE_KEY }}
-        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ secrets.TESTING_PRIVATE_KEY_PASS_PHRASE }}
+        PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
+        PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
+        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
+        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
       
     - name: upload-repo-el9
       run: |
         make upload-centos9
       env:
         COMBARCH: x86_64-amd64
-        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        TESTING_AWS_S3_BUCKET: ${{ secrets.TESTING_AWS_S3_BUCKET }}
-        TESTING_AWS_ACCESS_KEY_ID: ${{ secrets.TESTING_AWS_ACCESS_KEY_ID }}
-        TESTING_AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTING_AWS_SECRET_ACCESS_KEY }}
+        AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
+        TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
+        TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
         
     - name: github-rpm-release-el9
       run: |
@@ -164,20 +164,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    # - name: "Read secrets"
-    #   uses: rancher-eio/read-vault-secrets@main
-    #   with:
-    #     secrets: |
-    #       secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
+    - name: "Read secrets"
+      uses: rancher-eio/read-vault-secrets@main
+      with:
+        secrets: |
+          secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
           
     - name: build-rpm-microos
       run: |
@@ -187,22 +187,22 @@ jobs:
       run: |
         make sign-microos
       env:
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        PRIVATE_KEY_PASS_PHRASE: ${{ secrets.PRIVATE_KEY_PASS_PHRASE }}
-        TESTING_PRIVATE_KEY: ${{ secrets.TESTING_PRIVATE_KEY }}
-        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ secrets.TESTING_PRIVATE_KEY_PASS_PHRASE }}
+        PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
+        PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
+        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
+        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
       
     - name: upload-repo-microos
       run: |
         make upload-microos
       env:
         COMBARCH: x86_64-amd64
-        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        TESTING_AWS_S3_BUCKET: ${{ secrets.TESTING_AWS_S3_BUCKET }}
-        TESTING_AWS_ACCESS_KEY_ID: ${{ secrets.TESTING_AWS_ACCESS_KEY_ID }}
-        TESTING_AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTING_AWS_SECRET_ACCESS_KEY }}
+        AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
+        TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
+        TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
         
     - name: github-rpm-release-microos
       run: |
@@ -213,20 +213,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    # - name: "Read secrets"
-    #   uses: rancher-eio/read-vault-secrets@main
-    #   with:
-    #     secrets: |
-    #       secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
-    #       secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
+    - name: "Read secrets"
+      uses: rancher-eio/read-vault-secrets@main
+      with:
+        secrets: |
+          secret/data/github/repo/${{ github.repository }}/private_key | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private_key_passphrase | PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key | TESTING_PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_private_key_passphrase | TESTING_PRIVATE_KEY_PASS_PHRASE ;
+          secret/data/github/repo/${{ github.repository }}/aws_s3_bucket | AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/aws_access_key_id | AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/aws_secret_access_key | AWS_SECRET_ACCESS_KEY ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_s3_bucket | TESTING_AWS_S3_BUCKET ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_access_key_id | TESTING_AWS_ACCESS_KEY_ID ;
+          secret/data/github/repo/${{ github.repository }}/testing_aws_secret_access_key | TESTING_AWS_SECRET_ACCESS_KEY ;
           
     - name: build-rpm-slemicro
       run: |
@@ -236,22 +236,22 @@ jobs:
       run: |
         make sign-slemicro
       env:
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        PRIVATE_KEY_PASS_PHRASE: ${{ secrets.PRIVATE_KEY_PASS_PHRASE }}
-        TESTING_PRIVATE_KEY: ${{ secrets.TESTING_PRIVATE_KEY }}
-        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ secrets.TESTING_PRIVATE_KEY_PASS_PHRASE }}
+        PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
+        PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
+        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
+        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
       
     - name: upload-repo-slemicro
       run: |
         make upload-slemicro
       env:
         COMBARCH: x86_64-amd64
-        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        TESTING_AWS_S3_BUCKET: ${{ secrets.TESTING_AWS_S3_BUCKET }}
-        TESTING_AWS_ACCESS_KEY_ID: ${{ secrets.TESTING_AWS_ACCESS_KEY_ID }}
-        TESTING_AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTING_AWS_SECRET_ACCESS_KEY }}
+        AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
+        TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
+        TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
         
     - name: github-rpm-release-slemicro
       run: |
