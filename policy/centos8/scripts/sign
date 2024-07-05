@@ -49,9 +49,9 @@ EOF
 
 # checksum rpms
 pushd $(dirname $0)/..
-CHECKSUM_DIR=../../dist/centos8/noarch CHECKSUM_FILE=CHECKSUMsum-centos8-noarch.txt ./scripts/checksum
+DEST_DIR=../../dist/centos8/noarch CHECKSUM_DIR=../../dist/centos8/noarch CHECKSUM_FILE=sha256sum-centos8-noarch.txt ./scripts/checksum
 popd
 # checksum srcrpms
 pushd $(dirname $0)/..
-CHECKSUM_DIR=../../dist/centos8/source CHECKSUM_FILE=CHECKSUMsum-centos8-source.txt ./scripts/checksum
+DEST_DIR=../../dist/centos8/noarch  CHECKSUM_DIR=../../dist/centos8/source CHECKSUM_FILE=sha256sum-centos8-noarch.txt ./scripts/checksum
 popd

@@ -8,11 +8,13 @@ pwd
 
 CHECKSUM_DIR=${CHECKSUM_DIR:-./dist/centos7/noarch/}
 CHECKSUM_FILE=${CHECKSUM_FILE:-CHECKSUMsum-centos7-noarch.txt}
-sumfile="${CHECKSUM_DIR}/${CHECKSUM_FILE}"
+DEST_DIR=${DEST_DIR:-${CHECKSUM_DIR}}
 
-echo -n "" > "${sumfile}"
+sumfile="${DEST_DIR}/${CHECKSUM_FILE}"
 
-files=$(ls ${CHECKSUM_DIR} | grep -v "CHECKSUMsum")
+touch "${sumfile}"
+
+files=$(ls ${CHECKSUM_DIR} | grep -v "sha256sum")
 for file in ${files}; do
   sha256sum "${CHECKSUM_DIR}/${file}" | sed "s;$(dirname ${CHECKSUM_DIR}/${file})/;;g" >> "${sumfile}"
 done

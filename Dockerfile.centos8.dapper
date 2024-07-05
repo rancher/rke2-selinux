@@ -1,7 +1,7 @@
 FROM rockylinux:8
 
 RUN yum install -y epel-release \
- && yum -y install container-selinux git rpm-build selinux-policy-devel yum-utils
+ && yum install -y container-selinux git rpm-build selinux-policy-devel yum-utils pinentry python2-pip ca-certificates
 
 ENV DAPPER_SOURCE /source
 ENV DAPPER_OUTPUT ./dist
