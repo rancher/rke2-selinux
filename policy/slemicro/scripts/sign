@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e -x
+set -e -x 
 
 yum install -y rpm-sign expect git
 
@@ -46,3 +46,12 @@ expect eof
 lassign [wait] _ _ _ code
 exit \$code
 EOF
+
+# checksum rpms
+pushd $(dirname $0)/..
+DEST_DIR=../../dist/slemicro/noarch  CHECKSUM_DIR=../../dist/slemicro/noarch CHECKSUM_FILE=sha256sum-slemicro-noarch.txt ./scripts/checksum
+popd
+# checksum srcrpms
+pushd $(dirname $0)/..
+DEST_DIR=../../dist/slemicro/noarch  CHECKSUM_DIR=../../dist/slemicro/source CHECKSUM_FILE=sha256sum-slemicro-noarch.txt ./scripts/checksum
+popd

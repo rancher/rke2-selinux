@@ -46,3 +46,12 @@ expect eof
 lassign [wait] _ _ _ code
 exit \$code
 EOF
+
+# checksum rpms
+pushd $(dirname $0)/..
+DEST_DIR=../../dist/centos7/noarch CHECKSUM_DIR=../../dist/centos7/noarch CHECKSUM_FILE=sha256sum-centos7-noarch.txt ./scripts/checksum
+popd
+# checksum srcrpms
+pushd $(dirname $0)/..
+DEST_DIR=../../dist/centos7/noarch CHECKSUM_DIR=../../dist/centos7/source CHECKSUM_FILE=sha256sum-centos7-noarch.txt ./scripts/checksum
+popd
