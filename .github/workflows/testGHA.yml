@@ -1,0 +1,26 @@
+---
+name: Example Workflow
+on:
+  push:
+    branches:
+    - "test-GHA"
+jobs:
+  example-job:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-22.04
+    steps:
+    - name: "Read some Secrets"
+      uses: rancher-eio/read-vault-secrets@main
+      with:
+        secrets: |
+          secret/data/github/repo/rancher/rke2-selinux/testing-private-key-galal/credentials privateKey | TEST_GPG ;
+          secret/data/github/repo/rancher/rke2-selinux/testing-private-key-galal-phrase/credentials token | PHRASE
+
+    - name: "Use those Secrets"
+      run: |
+        touch test-to-sign
+        gpg --batch --import - <<<"$TEST_GPG"
+        gpg -s --passphrase $PHRASE test-to-sign
+        gpg -d < test-to-sign.gpg
