@@ -70,7 +70,7 @@ jobs:
       uses: rancher-eio/read-vault-secrets@main
       with:
         secrets: |
-          secret/data/github/repo/${{ github.repository }}/private-key/credentials token | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private-key/credentials privateKey | PRIVATE_KEY ;
           secret/data/github/repo/${{ github.repository }}/private-key-pass-phrase/credentials token | PRIVATE_KEY_PASS_PHRASE ;
           secret/data/github/repo/${{ github.repository }}/testing-private-key/credentials privateKey | TESTING_PRIVATE_KEY ;
           secret/data/github/repo/${{ github.repository }}/testing-private-key-pass-phrase/credentials token | TESTING_PRIVATE_KEY_PASS_PHRASE ;
@@ -119,7 +119,7 @@ jobs:
       uses: rancher-eio/read-vault-secrets@main
       with:
         secrets: |
-          secret/data/github/repo/${{ github.repository }}/private-key/credentials token | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private-key/credentials privateKey | PRIVATE_KEY ;
           secret/data/github/repo/${{ github.repository }}/private-key-pass-phrase/credentials token | PRIVATE_KEY_PASS_PHRASE ;
           secret/data/github/repo/${{ github.repository }}/testing-private-key/credentials privateKey | TESTING_PRIVATE_KEY ;
           secret/data/github/repo/${{ github.repository }}/testing-private-key-pass-phrase/credentials token | TESTING_PRIVATE_KEY_PASS_PHRASE ;
@@ -168,7 +168,7 @@ jobs:
       uses: rancher-eio/read-vault-secrets@main
       with:
         secrets: |
-          secret/data/github/repo/${{ github.repository }}/private-key/credentials token | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private-key/credentials privateKey | PRIVATE_KEY ;
           secret/data/github/repo/${{ github.repository }}/private-key-pass-phrase/credentials token | PRIVATE_KEY_PASS_PHRASE ;
           secret/data/github/repo/${{ github.repository }}/testing-private-key/credentials privateKey | TESTING_PRIVATE_KEY ;
           secret/data/github/repo/${{ github.repository }}/testing-private-key-pass-phrase/credentials token | TESTING_PRIVATE_KEY_PASS_PHRASE ;
@@ -217,7 +217,7 @@ jobs:
       uses: rancher-eio/read-vault-secrets@main
       with:
         secrets: |
-          secret/data/github/repo/${{ github.repository }}/private-key/credentials token | PRIVATE_KEY ;
+          secret/data/github/repo/${{ github.repository }}/private-key/credentials privateKey | PRIVATE_KEY ;
           secret/data/github/repo/${{ github.repository }}/private-key-pass-phrase/credentials token | PRIVATE_KEY_PASS_PHRASE ;
           secret/data/github/repo/${{ github.repository }}/testing-private-key/credentials privateKey | TESTING_PRIVATE_KEY ;
           secret/data/github/repo/${{ github.repository }}/testing-private-key-pass-phrase/credentials token | TESTING_PRIVATE_KEY_PASS_PHRASE ;
