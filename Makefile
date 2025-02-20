@@ -17,6 +17,9 @@ $(SIGN_TARGETS): .dapper
 $(UPLOAD_TARGETS): .dapper
 	./.dapper -f Dockerfile.centos7.dapper ./policy/$(@:upload-%=%)/scripts/upload-repo
 
+$(SIGN_AND_UPLOAD): .dapper
+	./.dapper -f Dockerfile.centos9.dapper ./policy/$(@:sign-and-upload-%=%)/scripts/sign-and-upload
+
 clean:
 	rm -rf dist/ Dockerfile.*.dapper[0-9]*
 
