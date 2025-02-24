@@ -18,6 +18,18 @@ jobs:
           - "centos9"
           - "microos"
           - "slemicro"
+        include:
+          - os: centos7
+            rpm-s3-path: centos/7
+          - os: centos8
+            rpm-s3-path: centos/8
+          - os: centos9
+            rpm-s3-path: centos/9
+          - os: microos
+            rpm-s3-path: microos
+          - os: slemicro
+            rpm-s3-path: slemicro
+
   steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -62,6 +74,8 @@ jobs:
         TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
         TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
         AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+        RPM_OS: ${{ matrix.os }}
+        RPM_OS_S3_PATH: ${{ matrix.rpm-s3-path }}
         AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
         TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
@@ -77,13 +91,15 @@ jobs:
           -e TESTING_PRIVATE_KEY="$TESTING_PRIVATE_KEY" \
           -e TESTING_PRIVATE_KEY_PASS_PHRASE="$TESTING_PRIVATE_KEY_PASS_PHRASE" \
           -e AWS_S3_BUCKET="$AWS_S3_BUCKET" \
+          -e RPM_OS="$RPM_OS" \
+          -e RPM_OS_S3_PATH="$RPM_OS_S3_PATH" \
           -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
           -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
           -e TESTING_AWS_S3_BUCKET="$TESTING_AWS_S3_BUCKET" \
           -e TESTING_AWS_ACCESS_KEY_ID="$TESTING_AWS_ACCESS_KEY_ID" \
           -e TESTING_AWS_SECRET_ACCESS_KEY="$TESTING_AWS_SECRET_ACCESS_KEY" \
           quay.io/centos/centos:stream9 \
-          policy/${{ matrix.os }}/scripts/sign-and-upload
+          scripts/sign-and-upload
     - name: Checksum
       run: |
         find dist/${{ matrix.os }}/noarch/*.rpm -type f | while read -r file; do
