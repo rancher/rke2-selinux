@@ -23,7 +23,7 @@ cat <<\EOF >~/.rpmmacros
 EOF
 
 if [ -z "$RPM_CHANNEL" ]; then
-  echo "RPM_PATH not defined, failing rpm upload"
+  echo "RPM_CHANNEL not defined, failing rpm upload"
   exit 1
 fi
 
@@ -32,13 +32,27 @@ if [ -z "$RPM_OS"]; then
   exit 1
 fi
 
-if [ -z "$RPM_OS_S3_PATH"]; then
-  echo "RPM_OS_S3_PATH not defined, failing rpm upload"
+case "$RPM_OS" in
+"centos9")
+  output="centos/9"
+  ;;
+"centos8")
+  output="centos/8"
+  ;;
+"centos7")
+  output="centos/7"
+  ;;
+"slemicro" | "microos")
+  output="$RPM_OS"
+  ;;
+*)
+  echo "No entry related to OS $RPM_OS"
   exit 1
-fi
+  ;;
+esac
 
-TARGET_S3_PATH="rke2/$RPM_CHANNEL/common/$RPM_OS_S3_PATH/noarch"
-TARGET_SOURCE_S3_PATH="rke2/$RPM_CHANNEL/common/$RPM_OS_S3_PATH/source"
+TARGET_S3_PATH="rke2/$RPM_CHANNEL/common/$output/noarch"
+TARGET_SOURCE_S3_PATH="rke2/$RPM_CHANNEL/common/$output/source"
 
 case "$RPM_CHANNEL" in
 "testing")
@@ -96,4 +110,3 @@ mv ./rpm_tooling /usr/bin
 
 rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_S3_PATH --region us-east-1 --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_ACCESS_KEY_ID dist/$RPM_OS/noarch/rke2-*.rpm
 rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_SOURCE_S3_PATH --region us-east-1 --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_ACCESS_KEY_ID dist/$RPM_OS/source/rke2-*src.rpm
-

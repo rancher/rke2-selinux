@@ -18,17 +18,6 @@ jobs:
           - "centos9"
           - "microos"
           - "slemicro"
-        include:
-          - os: centos7
-            rpm-s3-path: centos/7
-          - os: centos8
-            rpm-s3-path: centos/8
-          - os: centos9
-            rpm-s3-path: centos/9
-          - os: microos
-            rpm-s3-path: microos
-          - os: slemicro
-            rpm-s3-path: slemicro
 
   steps:
     - name: Checkout
@@ -75,7 +64,6 @@ jobs:
         TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
         AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
         RPM_OS: ${{ matrix.os }}
-        RPM_OS_S3_PATH: ${{ matrix.rpm-s3-path }}
         AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
         TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
@@ -86,13 +74,12 @@ jobs:
           -v "$(pwd):/workspace" \
           -w /workspace \
           -e TAG="$TAG" \
+          -e RPM_OS="$RPM_OS" \
           -e PRIVATE_KEY="$PRIVATE_KEY" \
           -e PRIVATE_KEY_PASS_PHRASE="$PRIVATE_KEY_PASS_PHRASE" \
           -e TESTING_PRIVATE_KEY="$TESTING_PRIVATE_KEY" \
           -e TESTING_PRIVATE_KEY_PASS_PHRASE="$TESTING_PRIVATE_KEY_PASS_PHRASE" \
           -e AWS_S3_BUCKET="$AWS_S3_BUCKET" \
-          -e RPM_OS="$RPM_OS" \
-          -e RPM_OS_S3_PATH="$RPM_OS_S3_PATH" \
           -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
           -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
           -e TESTING_AWS_S3_BUCKET="$TESTING_AWS_S3_BUCKET" \
