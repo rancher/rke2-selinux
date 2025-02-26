@@ -1,73 +1,31 @@
+name: Release
 on:
-  push:
-    tags:
-    - "v*"
-
-env:
-    GH_TOKEN: ${{ github.token }}
-
-name: Release RPMs
+  release:
+    types:
+      - published
 permissions:
     contents: write
     id-token: write
 jobs:
-  release-rpm-el7:
+  publish:
     runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: "Read secrets"
-      uses: rancher-eio/read-vault-secrets@main
-      with:
-        secrets: |
-          secret/data/github/repo/${{ github.repository }}/private-key/credentials privateKey | PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/private-key-pass-phrase/credentials token | PRIVATE_KEY_PASS_PHRASE ;
-          secret/data/github/repo/${{ github.repository }}/testing-private-key/credentials privateKey | TESTING_PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing-private-key-pass-phrase/credentials token | TESTING_PRIVATE_KEY_PASS_PHRASE ;
-          secret/data/github/repo/${{ github.repository }}/aws-s3-bucket/credentials token | AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/aws-access-key-id/credentials token | AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/aws-secret-access-key/credentials token | AWS_SECRET_ACCESS_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-s3-bucket/credentials token | TESTING_AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-access-key-id/credentials token | TESTING_AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-secret-access-key/credentials token | TESTING_AWS_SECRET_ACCESS_KEY ;
-          
-    - name: build-rpm-el7
-      run: |
-        make build-centos7
-    
-    - name: sign-rpm-el7
-      run: |
-        make sign-centos7
-      env:
-        PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
-        PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
-        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
-        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
-      
-    - name: upload-repo-el7
-      run: |
-        make upload-centos7
-      env:
-        COMBARCH: x86_64-amd64
-        AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
-        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-        TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
-        TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
-        TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - "centos7"
+          - "centos8"
+          - "centos9"
+          - "microos"
+          - "slemicro"
 
-    - name: github-rpm-release-el7
-      run: |
-        gh release upload ${{ github.ref_name }} dist/centos7/noarch/* dist/centos7/source/*
-  release-rpm-el8:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
+  steps:
+    - name: Checkout
       uses: actions/checkout@v4
-    
     - name: "Read secrets"
       uses: rancher-eio/read-vault-secrets@main
+      env:
+        GH_TOKEN: ${{ github.token }}
       with:
         secrets: |
           secret/data/github/repo/${{ github.repository }}/private-key/credentials privateKey | PRIVATE_KEY ;
@@ -80,183 +38,68 @@ jobs:
           secret/data/github/repo/${{ github.repository }}/testing-aws-s3-bucket/credentials token | TESTING_AWS_S3_BUCKET ;
           secret/data/github/repo/${{ github.repository }}/testing-aws-access-key-id/credentials token | TESTING_AWS_ACCESS_KEY_ID ;
           secret/data/github/repo/${{ github.repository }}/testing-aws-secret-access-key/credentials token | TESTING_AWS_SECRET_ACCESS_KEY ;
-          
-    - name: build-rpm-el8
+    - name: Install Dapper
       run: |
-        make build-centos8
-    
-    - name: sign-rpm-el8
-      run: |
-        make sign-centos8
+        mkdir -p .local/bin
+        curl -sL https://releases.rancher.com/dapper/latest/dapper-$(uname -s)-$(uname -m) > .local/bin/dapper
+        chmod +x .local/bin/dapper
+        echo ".local/bin" >> $GITHUB_PATH
+    - name: Build
       env:
-        PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
-        PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
-        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
-        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
-      
-    - name: upload-repo-el8
-      run: |
-        make upload-centos8
-      env:
-        COMBARCH: x86_64-amd64
+        TAG: ${{ github.ref_name }}
         AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
         AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
         TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
         TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
         TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
-        
-    - name: github-rpm-release-el8
       run: |
-        gh release upload ${{ github.ref_name }} dist/centos8/noarch/* dist/centos8/source/*
-  release-rpm-el9:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: "Read secrets"
-      uses: rancher-eio/read-vault-secrets@main
-      with:
-        secrets: |
-          secret/data/github/repo/${{ github.repository }}/private-key/credentials privateKey | PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/private-key-pass-phrase/credentials token | PRIVATE_KEY_PASS_PHRASE ;
-          secret/data/github/repo/${{ github.repository }}/testing-private-key/credentials privateKey | TESTING_PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing-private-key-pass-phrase/credentials token | TESTING_PRIVATE_KEY_PASS_PHRASE ;
-          secret/data/github/repo/${{ github.repository }}/aws-s3-bucket/credentials token | AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/aws-access-key-id/credentials token | AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/aws-secret-access-key/credentials token | AWS_SECRET_ACCESS_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-s3-bucket/credentials token | TESTING_AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-access-key-id/credentials token | TESTING_AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-secret-access-key/credentials token | TESTING_AWS_SECRET_ACCESS_KEY ;
-          
-    - name: build-rpm-el9
-      run: |
-        make build-centos9
-    
-    - name: sign-rpm-el9
-      run: |
-        make sign-centos9
+        dapper -f Dockerfile.${{ matrix.os }}.dapper policy/${{ matrix.os }}/scripts/build
+    - name: Sign and upload to S3
       env:
+        TAG: ${{ github.ref_name }}
         PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
         PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
         TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
         TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
-      
-    - name: upload-repo-el9
-      run: |
-        make upload-centos9
-      env:
-        COMBARCH: x86_64-amd64
         AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+        RPM_OS: ${{ matrix.os }}
         AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
         TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
         TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
         TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
-        
-    - name: github-rpm-release-el9
       run: |
-        gh release upload ${{ github.ref_name }} dist/centos9/noarch/* dist/centos9/source/*
-  release-rpm-microos:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: "Read secrets"
-      uses: rancher-eio/read-vault-secrets@main
-      with:
-        secrets: |
-          secret/data/github/repo/${{ github.repository }}/private-key/credentials privateKey | PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/private-key-pass-phrase/credentials token | PRIVATE_KEY_PASS_PHRASE ;
-          secret/data/github/repo/${{ github.repository }}/testing-private-key/credentials privateKey | TESTING_PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing-private-key-pass-phrase/credentials token | TESTING_PRIVATE_KEY_PASS_PHRASE ;
-          secret/data/github/repo/${{ github.repository }}/aws-s3-bucket/credentials token | AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/aws-access-key-id/credentials token | AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/aws-secret-access-key/credentials token | AWS_SECRET_ACCESS_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-s3-bucket/credentials token | TESTING_AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-access-key-id/credentials token | TESTING_AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-secret-access-key/credentials token | TESTING_AWS_SECRET_ACCESS_KEY ;
-          
-    - name: build-rpm-microos
+        docker run --rm \
+          -v "$(pwd):/workspace" \
+          -w /workspace \
+          -e TAG="$TAG" \
+          -e RPM_OS="$RPM_OS" \
+          -e PRIVATE_KEY="$PRIVATE_KEY" \
+          -e PRIVATE_KEY_PASS_PHRASE="$PRIVATE_KEY_PASS_PHRASE" \
+          -e TESTING_PRIVATE_KEY="$TESTING_PRIVATE_KEY" \
+          -e TESTING_PRIVATE_KEY_PASS_PHRASE="$TESTING_PRIVATE_KEY_PASS_PHRASE" \
+          -e AWS_S3_BUCKET="$AWS_S3_BUCKET" \
+          -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+          -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
+          -e TESTING_AWS_S3_BUCKET="$TESTING_AWS_S3_BUCKET" \
+          -e TESTING_AWS_ACCESS_KEY_ID="$TESTING_AWS_ACCESS_KEY_ID" \
+          -e TESTING_AWS_SECRET_ACCESS_KEY="$TESTING_AWS_SECRET_ACCESS_KEY" \
+          quay.io/centos/centos:stream9 \
+          scripts/sign-and-upload
+    - name: Checksum
       run: |
-        make build-microos
-    
-    - name: sign-rpm-microos
-      run: |
-        make sign-microos
-      env:
-        PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
-        PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
-        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
-        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
-      
-    - name: upload-repo-microos
-      run: |
-        make upload-microos
-      env:
-        COMBARCH: x86_64-amd64
-        AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
-        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-        TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
-        TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
-        TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
-        
-    - name: github-rpm-release-microos
-      run: |
-        gh release upload ${{ github.ref_name }} dist/microos/noarch/* dist/microos/source/*
-  release-rpm-slemicro:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: "Read secrets"
-      uses: rancher-eio/read-vault-secrets@main
-      with:
-        secrets: |
-          secret/data/github/repo/${{ github.repository }}/private-key/credentials privateKey | PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/private-key-pass-phrase/credentials token | PRIVATE_KEY_PASS_PHRASE ;
-          secret/data/github/repo/${{ github.repository }}/testing-private-key/credentials privateKey | TESTING_PRIVATE_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing-private-key-pass-phrase/credentials token | TESTING_PRIVATE_KEY_PASS_PHRASE ;
-          secret/data/github/repo/${{ github.repository }}/aws-s3-bucket/credentials token | AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/aws-access-key-id/credentials token | AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/aws-secret-access-key/credentials token | AWS_SECRET_ACCESS_KEY ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-s3-bucket/credentials token | TESTING_AWS_S3_BUCKET ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-access-key-id/credentials token | TESTING_AWS_ACCESS_KEY_ID ;
-          secret/data/github/repo/${{ github.repository }}/testing-aws-secret-access-key/credentials token | TESTING_AWS_SECRET_ACCESS_KEY ;
-          
-    - name: build-rpm-slemicro
-      run: |
-        make build-slemicro
-    
-    - name: sign-rpm-slemicro
-      run: |
-        make sign-slemicro
-      env:
-        PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
-        PRIVATE_KEY_PASS_PHRASE: ${{ env.PRIVATE_KEY_PASS_PHRASE }}
-        TESTING_PRIVATE_KEY: ${{ env.TESTING_PRIVATE_KEY }}
-        TESTING_PRIVATE_KEY_PASS_PHRASE: ${{ env.TESTING_PRIVATE_KEY_PASS_PHRASE }}
-      
-    - name: upload-repo-slemicro
-      run: |
-        make upload-slemicro
-      env:
-        COMBARCH: x86_64-amd64
-        AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
-        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-        TESTING_AWS_S3_BUCKET: ${{ env.TESTING_AWS_S3_BUCKET }}
-        TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
-        TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
-        
-    - name: github-rpm-release-slemicro
-      run: |
-        gh release upload ${{ github.ref_name }} dist/slemicro/noarch/* dist/slemicro/source/*
-      
+        find dist/${{ matrix.os }}/noarch/*.rpm -type f | while read -r file; do
+          sha256sum "$file" | awk '{print $1 "  " $2}' >> "sha256sum-${{ matrix.os }}-noarch.txt"
+        done
 
-      
-        
+        find dist/${{ matrix.os }}/source/*.rpm -type f | while read -r file; do
+          sha256sum "$file" | awk '{print $1 "  " $2}' >> "sha256sum-${{ matrix.os }}-source.txt"
+        done
+
+    - name: Upload to GitHub
+      env:
+        GH_TOKEN: ${{ github.token }}
+        OS: ${{ matrix.os }}
+        run: |
+          gh release upload ${{ github.ref_name }} dist/${{ matrix.os }}/noarch/* dist/${{ matrix.os }}/source/*
