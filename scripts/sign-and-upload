@@ -93,5 +93,5 @@ wget https://raw.githubusercontent.com/rancher/ecm-distro-tools/master/bin/rpm_t
 chmod +x rpm_tooling
 mv ./rpm_tooling /usr/bin
 
-rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_S3_PATH --region us-east-1 --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_ACCESS_KEY dist/$RPM_OS/noarch/rke2-*.rpm
-rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_SOURCE_S3_PATH --region us-east-1 --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_ACCESS_KEY dist/$RPM_OS/source/rke2-*src.rpm
+rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_S3_PATH --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_ACCESS_KEY dist/$RPM_OS/noarch/rke2-*.rpm
+rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_SOURCE_S3_PATH --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_ACCESS_KEY dist/$RPM_OS/source/rke2-*src.rpm
