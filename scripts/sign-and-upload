@@ -6,18 +6,18 @@ dnf install -y epel-release wget
 dnf install -y python3 python3-pip python3-devel \
   rpm-sign expect git
 
-dnf install -y ca-certificates createrepo_c
+dnf install -y ca-certificates createrepo_c pinentry pinentry-curses
 
 pip install --upgrade boto3 pexpect
 
 pushd $(dirname $0)/..
-. ../policy/centos9/scripts/version
+. ./scripts/version
 popd
 
 cat <<\EOF >~/.rpmmacros
 %_signature gpg
 %_gpg_name ci@rancher.com
-%__gpg_sign_cmd %{__gpg} gpg --force-v3-sigs --batch --verbose --no-armor --passphrase-fd 3 --no-secmem-warning -u "%{_gpg_name}" -sbo %{__signature_filename} --digest-algo sha256 %{__plaintext_filename}
+%__gpg_sign_cmd %{__gpg} gpg --pinentry-mode loopback --force-v3-sigs --verbose --no-armor -u "%{_gpg_name}" -sbo %{__signature_filename} --digest-algo sha256 %{__plaintext_filename}
 %_source_filedigest_algorithm 8
 %_binary_filedigest_algorithm 8
 EOF
@@ -27,7 +27,7 @@ if [ -z "$RPM_CHANNEL" ]; then
   exit 1
 fi
 
-if [ -z "$RPM_OS"]; then
+if [ -z "$RPM_OS" ]; then
   echo "RPM_OS not defined, failing rpm upload"
   exit 1
 fi
@@ -42,7 +42,9 @@ case "$RPM_CHANNEL" in
     echo "TESTING_PRIVATE_KEY not defined, failing rpm sign"
     exit 1
   fi
-  gpg --import - <<<"$TESTING_PRIVATE_KEY"
+  echo "$TESTING_PRIVATE_KEY" >key.gpg
+  gpg --batch --passphrase "$PRIVATE_KEY_PASS_PHRASE" --import key.gpg
+
   if [ -z "$TESTING_AWS_S3_BUCKET" ]; then
     echo "TESTING_AWS_S3_BUCKET not defined, failing rpm upload"
     exit 1
@@ -65,7 +67,9 @@ case "$RPM_CHANNEL" in
     echo "PRIVATE_KEY not defined, failing rpm sign"
     exit 1
   fi
-  gpg --import - <<<"$PRIVATE_KEY"
+  echo "$PRIVATE_KEY" >key.gpg
+  gpg --batch --passphrase "$PRIVATE_KEY_PASS_PHRASE" --import key.gpg
+
   if [ -z "$AWS_S3_BUCKET" ]; then
     echo "AWS_S3_BUCKET not defined, failing rpm upload"
     exit 1
@@ -89,5 +93,5 @@ wget https://raw.githubusercontent.com/rancher/ecm-distro-tools/master/bin/rpm_t
 chmod +x rpm_tooling
 mv ./rpm_tooling /usr/bin
 
-rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_S3_PATH --region us-east-1 --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_ACCESS_KEY_ID dist/$RPM_OS/noarch/rke2-*.rpm
-rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_SOURCE_S3_PATH --region us-east-1 --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_ACCESS_KEY_ID dist/$RPM_OS/source/rke2-*src.rpm
+rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_S3_PATH --region us-east-1 --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_ACCESS_KEY dist/$RPM_OS/noarch/rke2-*.rpm
+rpm_tooling --bucket $AWS_S3_BUCKET/$TARGET_SOURCE_S3_PATH --region us-east-1 --sign --sign-pass $PRIVATE_KEY_PASS_PHRASE --aws-access-key $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_ACCESS_KEY dist/$RPM_OS/source/rke2-*src.rpm
