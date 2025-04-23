@@ -1,4 +1,4 @@
-FROM registry.suse.com/bci/bci-base:15.4
+FROM registry.suse.com/bci/bci-base:15.6
 
 RUN zypper addrepo https://download.opensuse.org/repositories/security:/SELinux/15.4/security:SELinux.repo
 RUN zypper --gpg-auto-import-keys refresh
