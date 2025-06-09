@@ -1,6 +1,7 @@
 # vim: sw=4:ts=4:et
 
 %define rke2_relabel_files() \
+umask 0077; \
 mkdir -p /var/lib/cni; \
 mkdir -p /opt/cni; \
 mkdir -p /etc/cni; \
