@@ -1,6 +1,21 @@
-FROM registry.suse.com/bci/bci-base:15.6
+FROM registry.suse.com/suse/sle-micro/5.5:latest
 
-RUN zypper addrepo https://download.opensuse.org/repositories/security:/SELinux/15.6/security:SELinux.repo
+RUN cat <<EOF >/etc/zypp/repos.d/repo-oss.repo
+[repo-oss]
+name=Main Repository
+enabled=1
+autorefresh=1
+baseurl=http://download.opensuse.org/distribution/leap/15.6/repo/oss/
+EOF
+
+RUN cat <<EOF >/etc/zypp/repos.d/leap-micro.repo
+[leap-micro]
+name=Leap Updates
+enabled=1
+autorefresh=1
+baseurl=https://download.opensuse.org/update/leap-micro/5.5/sle/
+EOF
+
 RUN zypper --gpg-auto-import-keys refresh
 RUN zypper in -y -n --force-resolution container-selinux git rpm-build selinux-policy-devel
 
