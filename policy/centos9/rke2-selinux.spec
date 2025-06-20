@@ -1,15 +1,21 @@
 # vim: sw=4:ts=4:et
 
 %define rke2_relabel_files() \
-umask 0077; \
-mkdir -p /var/lib/cni; \
-mkdir -p /opt/cni; \
+umask 0022; \
 mkdir -p /etc/cni; \
-mkdir -p /var/lib/kubelet/pods; \
-mkdir -p /var/lib/rancher/rke2/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots; \
+mkdir -p /opt/cni; \
+mkdir -p /var/lib/cni; \
+mkdir -p /var/lib/kubelet; \
 mkdir -p /var/lib/rancher/rke2/data; \
 mkdir -p /var/run/flannel; \
+umask 0027; \
+mkdir -p /var/lib/kubelet/pods; \
+mkdir -p /var/lib/rancher/rke2/agent; \
+umask 0066; \
 mkdir -p /var/run/k3s; \
+umask 0077; \
+mkdir -p /var/lib/rancher/rke2/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots; \
+mkdir -p /var/lib/rancher/rke2/server; \
 restorecon -R -i /etc/systemd/system/rke2*; \
 restorecon -R -i /usr/local/lib/systemd/system/rke2*; \
 restorecon -R -i /usr/lib/systemd/system/rke2*; \
