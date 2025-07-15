@@ -26,6 +26,7 @@ interface(`rke2_filetrans_named_content',`
     filetrans_pattern($1, var_log_t, container_log_t, dir, "pods")
     filetrans_pattern($1, var_log_t, container_log_t, dir, "containers")
     filetrans_pattern($1, container_var_lib_t, container_log_t, dir, "logs")
+    filetrans_pattern($1, container_var_lib_t, container_log_t, file, "containerd.log")
     filetrans_pattern($1, container_var_lib_t, rke2_tls_t, dir, "tls")
 ')
 
