@@ -36,7 +36,7 @@ Release:    %{rke2_selinux_release}.el8
 Summary:    SELinux policy module for rke2
 
 Group:      System Environment/Base
-License:    ASL 2.0
+License:    Apache-2.0
 URL:        https://rke2.io
 Source0:    rke2.pp
 Source1:    rke2.if
