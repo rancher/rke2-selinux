@@ -17,6 +17,7 @@ umask 0077; \
 mkdir -p /var/lib/rancher/rke2/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots; \
 mkdir -p /var/lib/rancher/rke2/server; \
 restorecon -FRT 0 -i /etc/systemd/system/rke2*; \
+restorecon -FRT 0 -i /usr/local/lib/systemd/system/rke2*; \
 restorecon -FRT 0 -i /usr/lib/systemd/system/rke2*; \
 restorecon -FRT 0 /var/lib/cni; \
 restorecon -FRT 0 /opt/cni; \
@@ -26,14 +27,13 @@ restorecon -FRT 0 /var/lib/rancher; \
 restorecon -FRT 0 /var/run/k3s; \
 restorecon -FRT 0 /var/run/flannel
 
-%define selinux_policyver 3.13.1-252
-%define container_policyver 2.107-3
-%define container_policy_epoch 2
-%define container_policy_schism 2.164.2
+%define selinux_policyver 40.13.26-1
+%define container_policyver 2.235.0-2
+%define container_policy_epoch 4
 
 Name:       rke2-selinux
 Version:    %{rke2_selinux_version}
-Release:    %{rke2_selinux_release}.el7
+Release:    %{rke2_selinux_release}.el10
 Summary:    SELinux policy module for rke2
 Vendor:     SUSE LLC
 Packager:   SUSE LLC <https://www.suse.com/>
@@ -46,7 +46,6 @@ Source1:    rke2.if
 
 BuildArch:      noarch
 BuildRequires:  container-selinux >= %{container_policy_epoch}:%{container_policyver}
-BuildRequires:  container-selinux < %{container_policy_epoch}:%{container_policy_schism}
 BuildRequires:  git
 BuildRequires:  selinux-policy >= %{selinux_policyver}
 BuildRequires:  selinux-policy-devel >= %{selinux_policyver}
@@ -55,7 +54,6 @@ Requires: policycoreutils, libselinux-utils
 Requires(post): selinux-policy-base >= %{selinux_policyver}
 Requires(post): policycoreutils
 Requires(post): container-selinux >= %{container_policy_epoch}:%{container_policyver}
-Requires(post): container-selinux < %{container_policy_epoch}:%{container_policy_schism}
 Requires(postun): policycoreutils
 
 Provides: %{name} = %{version}-%{release}
