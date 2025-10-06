@@ -8,15 +8,6 @@ name: Build
 permissions:
     contents: read
 jobs:
-  build-rpm-el7:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: build-rpm
-      run: |
-        make build-centos7
   build-rpm-el8:
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +26,15 @@ jobs:
     - name: build-rpm
       run: |
         make build-centos9
+  build-rpm-el10:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: build-rpm
+      run: |
+        make build-centos10
   build-rpm-slemicro:
     runs-on: ubuntu-latest
     steps:
