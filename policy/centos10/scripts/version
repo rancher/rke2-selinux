@@ -22,6 +22,8 @@ if [ -d ${DAPPER_SOURCE}/.git ]; then
     popd
 fi
 
+VERSION=$TAG
+
 if [[ -n "$TAG" ]]; then
     if [[ "$TREE_STATE" = "clean" ]]; then
         VERSION=$TAG # We will only accept the tag as our version if the tree state is clean and the tag is in fact defined.

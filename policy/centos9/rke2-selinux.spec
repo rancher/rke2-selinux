@@ -93,3 +93,4 @@ fi;
 %{_datadir}/selinux/devel/include/contrib/rke2.if
 
 %changelog
+%include %{changelog_path}
