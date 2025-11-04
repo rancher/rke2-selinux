@@ -35,6 +35,8 @@ Name:       rke2-selinux
 Version:    %{rke2_selinux_version}
 Release:    %{rke2_selinux_release}.el9
 Summary:    SELinux policy module for rke2
+Vendor:     SUSE LLC
+Packager:   SUSE LLC <https://www.suse.com/>
 
 Group:      System Environment/Base
 License:    Apache-2.0
