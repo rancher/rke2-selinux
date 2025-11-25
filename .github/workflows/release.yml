@@ -15,9 +15,9 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - "centos7"
           - "centos8"
           - "centos9"
+          - "centos10"
           - "microos"
           - "slemicro"
     steps:
