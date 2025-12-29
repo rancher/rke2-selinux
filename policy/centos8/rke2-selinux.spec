@@ -10,13 +10,12 @@ mkdir -p /var/lib/rancher/rke2/data; \
 mkdir -p /var/run/flannel; \
 umask 0027; \
 mkdir -p /var/lib/kubelet/pods; \
-mkdir -p /var/lib/rancher/rke2/agent; \
+mkdir -p /var/lib/rancher/rke2/agent/logs; \
 umask 0066; \
 mkdir -p /var/run/k3s; \
 umask 0077; \
 mkdir -p /var/lib/rancher/rke2/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots; \
 mkdir -p /var/lib/rancher/rke2/server; \
-mkdir -p /var/lib/rancher/rke2/agent/logs; \
 restorecon -FR -i /etc/systemd/system/rke2*; \
 restorecon -FR -i /usr/lib/systemd/system/rke2*; \
 restorecon -FR /var/lib/cni; \
