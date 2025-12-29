@@ -16,7 +16,6 @@ mkdir -p /var/run/k3s; \
 umask 0077; \
 mkdir -p /var/lib/rancher/rke2/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots; \
 mkdir -p /var/lib/rancher/rke2/server; \
-mkdir -p /var/lib/rancher/rke2/agent/logs; \
 restorecon -FRT 0 -i /etc/systemd/system/rke2*; \
 restorecon -FRT 0 -i /usr/lib/systemd/system/rke2*; \
 restorecon -FRT 0 /var/lib/cni; \
