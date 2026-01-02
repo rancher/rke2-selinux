@@ -10,7 +10,7 @@ mkdir -p /var/lib/rancher/rke2/data; \
 mkdir -p /var/run/flannel; \
 umask 0027; \
 mkdir -p /var/lib/kubelet/pods; \
-mkdir -p /var/lib/rancher/rke2/agent; \
+mkdir -p /var/lib/rancher/rke2/agent/logs; \
 umask 0066; \
 mkdir -p /var/run/k3s; \
 umask 0077; \
