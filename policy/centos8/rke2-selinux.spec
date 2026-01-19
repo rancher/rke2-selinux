@@ -22,7 +22,7 @@ restorecon -FR /var/lib/cni; \
 restorecon -FR /opt/cni; \
 restorecon -FR /etc/cni; \
 restorecon -FR /var/lib/kubelet; \
-restorecon -FR /var/lib/rancher; \
+restorecon -FR /var/lib/rancher/rke2; \
 restorecon -FR /var/run/k3s; \
 restorecon -FR /var/run/flannel
 
