@@ -2,11 +2,7 @@
 set -ex
 
 if [ -e ./policy/centos10/scripts/"$1" ]; then
-    ./policy/centos10/scripts/"$@"
+  ./policy/centos10/scripts/"$@"
 else
-    exec "$@"
-fi
-
-if [ "$DAPPER_UID" -ne "-1" ]; then
-  chown -R $DAPPER_UID:$DAPPER_GID .
+  exec "$@"
 fi

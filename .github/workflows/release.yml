@@ -26,6 +26,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: "Read secrets"
         uses: rancher-eio/read-vault-secrets@main
         env:
@@ -43,13 +46,6 @@ jobs:
             secret/data/github/repo/${{ github.repository }}/testing-aws-access-key-id/credentials token | TESTING_AWS_ACCESS_KEY_ID ;
             secret/data/github/repo/${{ github.repository }}/testing-aws-secret-access-key/credentials token | TESTING_AWS_SECRET_ACCESS_KEY ;
 
-      - name: Install Dapper
-        run: |
-          mkdir -p .local/bin
-          curl -sL https://releases.rancher.com/dapper/latest/dapper-$(uname -s)-$(uname -m) > .local/bin/dapper
-          chmod +x .local/bin/dapper
-          echo ".local/bin" >> $GITHUB_PATH
-
       - name: Build
         env:
           TAG: ${{ github.ref_name }}
@@ -60,7 +56,11 @@ jobs:
           TESTING_AWS_ACCESS_KEY_ID: ${{ env.TESTING_AWS_ACCESS_KEY_ID }}
           TESTING_AWS_SECRET_ACCESS_KEY: ${{ env.TESTING_AWS_SECRET_ACCESS_KEY }}
         run: |
-          dapper -f Dockerfile.${{ matrix.os }}.dapper policy/${{ matrix.os }}/scripts/build
+          docker buildx build \
+            --target result --output=. \
+            --build-arg "TAG=$(TAG)" \
+            --build-arg "SCRIPT=build" \
+            -f Dockerfile.{{ matrix.os }} .
 
       - name: Sign and upload to S3
         env:

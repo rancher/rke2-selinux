@@ -2,7 +2,7 @@
 set -euo pipefail
 
 OUT="${1:?usage: gen-spec-changelog <output-path>}"
-REPO="${DAPPER_SOURCE:-/source}"
+REPO="${SOURCE:-/source}"
 
 RPM_VERSION="${RPM_VERSION:?RPM_VERSION missing}"
 RPM_RELEASE="${RPM_RELEASE:?RPM_RELEASE missing}"
@@ -15,7 +15,7 @@ DATE="$(date "+%a %b %d %Y")"
 RANGE_ARGS=()
 
 if [[ -n "$COMMIT" ]]; then
-   if [[ "$TAG" =~ ^(v[0-9]+\.[0-9]+)\.([^.]+)\.([0-9]+)$ ]]; then
+  if [[ "$TAG" =~ ^(v[0-9]+\.[0-9]+)\.([^.]+)\.([0-9]+)$ ]]; then
     base="${BASH_REMATCH[1]}"
     channel="${BASH_REMATCH[2]}"
     release="${BASH_REMATCH[3]}"
@@ -26,37 +26,40 @@ if [[ -n "$COMMIT" ]]; then
       mapfile -t tag_list < <(git -C "$REPO" tag --list "${base}.${channel}.*" 2>/dev/null | sort -V)
     fi
 
-    	prev_tag=""
-    	for i in "${!tag_list[@]}"; do
-      	if [[ "${tag_list[i]}" == "$TAG" ]]; then
-        	break
-      	fi
-      	prev_tag="${tag_list[i]}"
-    	done
+    prev_tag=""
+    for i in "${!tag_list[@]}"; do
+      if [[ "${tag_list[i]}" == "$TAG" ]]; then
+        break
+      fi
+      prev_tag="${tag_list[i]}"
+    done
 
-    	echo "Found previous tag: ${prev_tag:-<none>}"
+    echo "Found previous tag: ${prev_tag:-<none>}"
 
-    	if [[ -n "$prev_tag" ]]; then
-      		RANGE_ARGS=("${prev_tag}..${TAG}")
-    	else
-      		RANGE_ARGS=("${TAG}^..${TAG}")
-    	fi
-    else	
-	    LATEST_TAG="$(git -C "$REPO" tag --list --sort=-v:refname | head -n1)"
-	    echo $LATEST_TAG
-	    RANGE_ARGS=("${LATEST_TAG}...${COMMIT}")
-	    echo $RANGE_ARGS
+    if [[ -n "$prev_tag" ]]; then
+      RANGE_ARGS=("${prev_tag}..${TAG}")
+    else
+      RANGE_ARGS=("${TAG}^..${TAG}")
     fi
+  else
+    LATEST_TAG="$(git -C "$REPO" tag --list --sort=-v:refname | head -n1)"
+    echo $LATEST_TAG
+    RANGE_ARGS=("${LATEST_TAG}...${COMMIT}")
+    echo $RANGE_ARGS
+  fi
 else
-       echo "COMMIT is missing: $COMMIT"
-       exit 1
+  echo "COMMIT is missing: $COMMIT"
+  exit 1
 fi
-
 
 {
   echo "* ${DATE} ${PACKAGER} - ${RPM_VERSION}.${RPM_CHANNEL}.${RPM_RELEASE}"
   git_output="$(git -C "$REPO" log "${RANGE_ARGS[@]}" --no-merges --pretty='format:- %s' 2>/dev/null || true)"
-  printf '%s\n' "$git_output"
-} > "$OUT"
+  if [[ -z "$git_output" ]]; then
+    printf '%s\n' "- No changelogs for this version"
+  else
+    printf '%s\n' "$git_output"
+  fi
+} >"$OUT"
 
 sed -i 's/[\x00-\x1F\x7F]//g' "$OUT"

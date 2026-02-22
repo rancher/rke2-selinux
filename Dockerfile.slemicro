@@ -1,4 +1,4 @@
-FROM registry.suse.com/suse/sle-micro/5.5:latest
+FROM registry.suse.com/suse/sle-micro/5.5:latest AS build
 
 RUN cat <<EOF >/etc/zypp/repos.d/repo-oss.repo
 [repo-oss]
@@ -19,10 +19,19 @@ EOF
 RUN zypper --gpg-auto-import-keys refresh
 RUN zypper in -y -n --force-resolution container-selinux git rpm-build selinux-policy-devel
 
-ENV DAPPER_SOURCE /source
-ENV DAPPER_OUTPUT ./dist
-ENV DAPPER_ENV COMBARCH CHECKSUM_DIR CHECKSUM_FILE TAG PRIVATE_KEY PRIVATE_KEY_PASS_PHRASE TESTING_PRIVATE_KEY TESTING_PRIVATE_KEY_PASS_PHRASE AWS_S3_BUCKET AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY TESTING_AWS_S3_BUCKET TESTING_AWS_ACCESS_KEY_ID TESTING_AWS_SECRET_ACCESS_KEY
-ENV HOME ${DAPPER_SOURCE}
-WORKDIR ${DAPPER_SOURCE}
+ENV SOURCE=/source
 
-ENTRYPOINT ["./policy/slemicro/scripts/entry"]
+WORKDIR ${SOURCE}
+
+COPY . .
+
+ARG TAG
+ARG SCRIPT=build
+
+RUN ${SOURCE}/policy/slemicro/scripts/entry "${SCRIPT}"
+
+FROM scratch AS result
+ENV SOURCE=/source
+
+COPY --from=build ${SOURCE}/dist /dist
+

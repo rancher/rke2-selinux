@@ -2,7 +2,7 @@
 set -e -x
 
 cd $(dirname $0)/..
-. ./scripts/version
+. ../../scripts/version
 
 make -f /usr/share/selinux/devel/Makefile rke2.pp
 
@@ -13,15 +13,15 @@ touch $CHANGELOG_PATH
 . ../../scripts/gen-changelog $CHANGELOG_PATH
 
 rpmbuild \
-    --define "rke2_selinux_version ${RPM_VERSION}" \
-    --define "rke2_selinux_release ${RPM_RELEASE}" \
-    --define "_sourcedir $PWD" \
-    --define "_specdir $PWD" \
-    --define "_builddir $PWD" \
-    --define "_srcrpmdir ${PWD}/dist/source" \
-    --define "_buildrootdir $PWD/.build" \
-    --define "_rpmdir ${PWD}/dist" \
-    --define "changelog_path $CHANGELOG_PATH" \
-    -ba rke2-selinux.spec
+  --define "rke2_selinux_version ${RPM_VERSION}" \
+  --define "rke2_selinux_release ${RPM_RELEASE}" \
+  --define "_sourcedir $PWD" \
+  --define "_specdir $PWD" \
+  --define "_builddir $PWD" \
+  --define "_srcrpmdir ${PWD}/dist/source" \
+  --define "_buildrootdir $PWD/.build" \
+  --define "_rpmdir ${PWD}/dist" \
+  --define "changelog_path $CHANGELOG_PATH" \
+  -ba rke2-selinux.spec
 
 cp -r dist/* /source/dist/centos10
