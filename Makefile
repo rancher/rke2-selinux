@@ -3,8 +3,8 @@ BUILD_TARGETS := $(addprefix build-,$(shell ls policy/))
 $(BUILD_TARGETS):
 	docker buildx build \
       --target result --output=. \
-      --build-arg "TAG=$(TAG)" \
-      --build-arg "SCRIPT=build" \
+      --build-arg TAG="${TAG}" \
+      --build-arg SCRIPT=build \
 			-f Dockerfile.$(@:build-%=%) .
 
 clean:

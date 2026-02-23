@@ -58,9 +58,9 @@ jobs:
         run: |
           docker buildx build \
             --target result --output=. \
-            --build-arg "TAG=$(TAG)" \
-            --build-arg "SCRIPT=build" \
-            -f Dockerfile.{{ matrix.os }} .
+            --build-arg TAG="${TAG}" \
+            --build-arg SCRIPT=build \
+            -f Dockerfile.${{ matrix.os }} .
 
       - name: Sign and upload to S3
         env:
