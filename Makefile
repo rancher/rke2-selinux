@@ -1,16 +1,13 @@
 BUILD_TARGETS := $(addprefix build-,$(shell ls policy/))
 
-.dapper:
-	@echo Downloading dapper
-	@curl -sL https://releases.rancher.com/dapper/latest/dapper-$$(uname -s)-$$(uname -m) > .dapper.tmp
-	@@chmod +x .dapper.tmp
-	@./.dapper.tmp -v
-	@mv .dapper.tmp .dapper
-
-$(BUILD_TARGETS): .dapper
-	./.dapper -f Dockerfile.$(@:build-%=%).dapper ./policy/$(@:build-%=%)/scripts/build
+$(BUILD_TARGETS):
+	docker buildx build \
+      --target result --output=. \
+      --build-arg TAG="${TAG}" \
+      --build-arg SCRIPT=build \
+			-f Dockerfile.$(@:build-%=%) .
 
 clean:
-	rm -rf dist/ Dockerfile.*.dapper[0-9]*
+	rm -rf dist/
 
 .PHONY: $(BUILD_TARGETS) clean
