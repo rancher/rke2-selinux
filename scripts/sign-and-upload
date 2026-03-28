@@ -89,7 +89,9 @@ case "$RPM_CHANNEL" in
   ;;
 esac
 
-wget https://raw.githubusercontent.com/rancher/ecm-distro-tools/master/bin/rpm_tooling
+RPM_TOOLING_SHA256="fa468d7a4459eff0ae9924286f2a4faf50d101f110798ca675033f0156118c85"
+wget -q https://raw.githubusercontent.com/rancher/ecm-distro-tools/master/bin/rpm_tooling -O rpm_tooling
+echo "${RPM_TOOLING_SHA256}  rpm_tooling" | sha256sum -c -
 chmod +x rpm_tooling
 mv ./rpm_tooling /usr/bin
 
