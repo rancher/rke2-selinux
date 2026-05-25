@@ -16,16 +16,16 @@ mkdir -p /var/run/k3s; \
 umask 0077; \
 mkdir -p /var/lib/rancher/rke2/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots; \
 mkdir -p /var/lib/rancher/rke2/server/db/snapshots; \
-restorecon -RT 0 -i /etc/systemd/system/rke2*; \
-restorecon -RT 0 -i /usr/local/lib/systemd/system/rke2*; \
-restorecon -RT 0 -i /usr/lib/systemd/system/rke2*; \
-restorecon -RT 0 /var/lib/cni; \
-restorecon -RT 0 /opt/cni; \
-restorecon -RT 0 /etc/cni; \
-restorecon -RT 0 /var/lib/kubelet; \
-restorecon -RT 0 /var/lib/rancher/rke2; \
-restorecon -RT 0 /var/run/k3s; \
-restorecon -RT 0 /var/run/flannel
+restorecon -RTU 0 -i /etc/systemd/system/rke2*; \
+restorecon -RTU 0 -i /usr/local/lib/systemd/system/rke2*; \
+restorecon -RTU 0 -i /usr/lib/systemd/system/rke2*; \
+restorecon -RTU 0 /var/lib/cni; \
+restorecon -RTU 0 /opt/cni; \
+restorecon -RTU 0 /etc/cni; \
+restorecon -RTU 0 /var/lib/kubelet; \
+restorecon -RTU 0 /var/lib/rancher/rke2; \
+restorecon -RTU 0 /var/run/k3s; \
+restorecon -RTU 0 /var/run/flannel
 
 %define selinux_policyver 3.13.1-252
 %define container_policyver 2.191.0-1
