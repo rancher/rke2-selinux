@@ -2,8 +2,6 @@
 
 %define rke2_relabel_files() \
 umask 0022; \
-mkdir -p /etc/cni; \
-mkdir -p /opt/cni; \
 mkdir -p /var/lib/cni; \
 mkdir -p /var/lib/kubelet; \
 mkdir -p /var/lib/rancher/rke2/data; \
@@ -16,15 +14,20 @@ mkdir -p /var/run/k3s; \
 umask 0077; \
 mkdir -p /var/lib/rancher/rke2/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots; \
 mkdir -p /var/lib/rancher/rke2/server/db/snapshots; \
-restorecon -RT 0 -i /etc/systemd/system/rke2*; \
-restorecon -RT 0 -i /usr/lib/systemd/system/rke2*; \
 restorecon -RT 0 /var/lib/cni; \
-restorecon -RT 0 /opt/cni; \
-restorecon -RT 0 /etc/cni; \
 restorecon -RT 0 /var/lib/kubelet; \
 restorecon -RT 0 /var/lib/rancher/rke2; \
 restorecon -RT 0 /var/run/k3s; \
-restorecon -RT 0 /var/run/flannel
+restorecon -RT 0 /var/run/flannel; \
+if [ -z "${TRANSACTIONAL_UPDATE}" ]; then \
+umask 0022; \
+mkdir -p /etc/cni; \
+mkdir -p /opt/cni; \
+restorecon -RT 0 -i /etc/systemd/system/rke2*; \
+restorecon -RT 0 -i /usr/lib/systemd/system/rke2*; \
+restorecon -RT 0 /opt/cni; \
+restorecon -RT 0 /etc/cni; \
+fi
 
 %define selinux_policyver 20210716-3.1
 %define selinux_policyver_build 3.13.1-252
@@ -75,7 +78,9 @@ install -d %{buildroot}/etc/selinux/targeted/contexts/users/
 %post
 semodule -n -i %{_datadir}/selinux/packages/rke2.pp
 if /usr/sbin/selinuxenabled ; then
-    /usr/sbin/load_policy
+    if [ -z "${TRANSACTIONAL_UPDATE}" ]; then
+        /usr/sbin/load_policy
+    fi
     %rke2_relabel_files
 fi;
 
