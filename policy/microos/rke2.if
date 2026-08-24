@@ -13,6 +13,7 @@ interface(`rke2_filetrans_named_content',`
         type container_kvm_var_run_t;
         type var_lib_t;
         type var_log_t;
+        type usr_t;
         type rke2_tls_t;
     ')
 
@@ -27,6 +28,7 @@ interface(`rke2_filetrans_named_content',`
     filetrans_pattern($1, container_var_lib_t, container_log_t, dir, "logs")
     filetrans_pattern($1, container_var_lib_t, container_log_t, file, "containerd.log")
     filetrans_pattern($1, container_var_lib_t, rke2_tls_t, dir, "tls")
+    filetrans_pattern($1, usr_t, container_file_t, dir, "cni")
 ')
 
 template(`rke2_service_domain_template',`
