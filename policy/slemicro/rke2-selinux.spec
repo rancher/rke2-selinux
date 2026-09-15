@@ -75,22 +75,22 @@ install -d %{buildroot}/etc/selinux/targeted/contexts/users/
 %pre
 %selinux_relabel_pre
 
-%post
-semodule -n -i %{_datadir}/selinux/packages/rke2.pp
-if /usr/sbin/selinuxenabled ; then
-    if [ -z "${TRANSACTIONAL_UPDATE}" ]; then
-        /usr/sbin/load_policy
-    fi
-    %rke2_relabel_files
-fi;
-
 %postun
 if [ $1 -eq 0 ]; then
     %selinux_modules_uninstall rke2
 fi;
 
 %posttrans
+semodule -n -i %{_datadir}/selinux/packages/rke2.pp
+if /usr/sbin/selinuxenabled ; then
+    if [ -z "${TRANSACTIONAL_UPDATE}" ]; then
+        /usr/sbin/load_policy
+    fi
+fi;
 %selinux_relabel_post
+if /usr/sbin/selinuxenabled ; then
+    %rke2_relabel_files
+fi;
 
 %files
 %attr(0600,root,root) %{_datadir}/selinux/packages/rke2.pp
