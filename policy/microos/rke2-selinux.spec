@@ -34,7 +34,7 @@ fi
 
 Name:       rke2-selinux
 Version:    %{rke2_selinux_version}
-Release:    %{rke2_selinux_release}.sle
+Release:    %{rke2_selinux_release}.microos
 Summary:    SELinux policy module for rke2
 Vendor:     SUSE LLC
 Packager:   SUSE LLC <https://www.suse.com/>
