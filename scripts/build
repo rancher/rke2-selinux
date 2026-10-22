@@ -14,7 +14,10 @@ DIST_DIR=${SOURCE}/dist/${POLICY}
 mkdir -p ${BUILD_DIR}
 cp ${POLICY_DIR}/rke2.te ${POLICY_DIR}/rke2.if ${POLICY_DIR}/rke2.fc ${POLICY_DIR}/rke2-selinux.spec ${BUILD_DIR}
 pushd ${BUILD_DIR}
-make -f /usr/share/selinux/devel/Makefile rke2.pp
+# MODULE_POLICY_VERSION pins the module format for targets with an older libsepol
+make -f /usr/share/selinux/devel/Makefile \
+  ${MODULE_POLICY_VERSION:+"CHECKMODULE=/usr/bin/checkmodule -M -c ${MODULE_POLICY_VERSION}"} \
+  rke2.pp
 popd
 
 mkdir -p ${DIST_DIR}
