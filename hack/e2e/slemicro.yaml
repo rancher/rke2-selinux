@@ -1,0 +1,23 @@
+images:
+# SLE Micro images require a SUSE registration, so the slemicro policy is tested
+# on openSUSE Leap 16 (SELinux enforcing by default, cloud-init enabled). This is
+# also the policy get.rke2.io selects for SLES.
+#
+# Pinned to a numbered build: the unversioned "-Cloud.qcow2" URL is replaced on
+# every rebuild, which breaks the digest check. Bump build and digest together
+# (digests: <location>.sha256) when openSUSE removes this build.
+- location: https://download.opensuse.org/distribution/leap/16.0/appliances/Leap-16.0-Minimal-VM.x86_64-Cloud-Build18.94.qcow2
+  arch: x86_64
+  digest: "sha256:8519e3c73acd783cbb4d6820bce0caa120221db19cdb1e039441d152b4479588"
+
+- location: https://download.opensuse.org/distribution/leap/16.0/appliances/Leap-16.0-Minimal-VM.aarch64-Cloud-Build18.94.qcow2
+  arch: aarch64
+  digest: "sha256:d18ee54fb378814a3a362597891059972ca71b0c4871fc40ba0e936dc914e8c2"
+
+provision:
+- mode: system
+  script: |
+    zypper --gpg-auto-import-keys ref
+    # tar: needed by the RKE2 tarball installer.
+    # iptables: needed by rke2-ingress-nginx-controller (executable file not found in $PATH).
+    zypper --non-interactive install -y tar iptables
