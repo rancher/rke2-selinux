@@ -8,6 +8,7 @@ on:
       - 'policy/**'
       - 'Dockerfile.*'
       - 'Makefile'
+      - 'scripts/**'
       - 'hack/e2e/**'
       - '.github/workflows/e2e.yml'
   pull_request:
@@ -15,6 +16,7 @@ on:
       - 'policy/**'
       - 'Dockerfile.*'
       - 'Makefile'
+      - 'scripts/**'
       - 'hack/e2e/**'
       - '.github/workflows/e2e.yml'
 
@@ -31,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: [centos8, centos9, centos10, microos, slemicro]
+        distro: [centos8, centos9, centos10, microos, sle]
 
     runs-on: ubuntu-latest
     timeout-minutes: 60

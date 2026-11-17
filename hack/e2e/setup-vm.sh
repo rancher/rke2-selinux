@@ -190,7 +190,13 @@ function verifyFileContexts() {
     checkFileContext container_log_t \
         ${RKE2_DATA_DIR}/agent/logs/kubelet.log \
         ${RKE2_DATA_DIR}/agent/containerd/containerd.log
-    checkFileContext container_var_run_t /run/k3s
+    # The SUSE policies comment out the /run/k3s rule, leaving it to container-selinux, which has
+    # no rule for it either: it keeps the default var_run_t. Update this if either side changes.
+    if isSUSE; then
+        checkFileContext var_run_t /run/k3s
+    else
+        checkFileContext container_var_run_t /run/k3s
+    fi
     checkFileContext container_file_t /etc/cni /etc/cni/net.d /opt/cni /opt/cni/bin
 
     # Informational: list paths whose type differs from the file context database.

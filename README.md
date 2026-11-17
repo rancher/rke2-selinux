@@ -50,4 +50,7 @@ installs the RPM, installs RKE2 with `selinux: true` and checks that:
 - RKE2 files (binaries, data dir, TLS, etcd data and snapshots, logs, CNI) have the expected labels;
 - there are no AVC denials involving `container_runtime_t` or `rke2_*` types.
 
+Every policy has an end-to-end test except `slemicro` (SLE Micro 5.x): there is no freely available
+cloud-init image for it, and it is transactional. The `sle` policy is tested on openSUSE Leap 16.
+
 Use `INSTALL_RKE2_VERSION` to test against another RKE2 release (e.g. `make e2e-centos9 INSTALL_RKE2_VERSION=v1.36.6+rke2r1`).
