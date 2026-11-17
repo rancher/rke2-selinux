@@ -1,0 +1,16 @@
+images:
+# No digest: Tumbleweed is rolling and only the latest snapshot is kept on the
+# mirror, so any pinned digest (or snapshot URL) breaks within days.
+- location: https://download.opensuse.org/tumbleweed/appliances/openSUSE-Tumbleweed-Minimal-VM.x86_64-Cloud.qcow2
+  arch: x86_64
+
+- location: https://download.opensuse.org/ports/aarch64/tumbleweed/appliances/openSUSE-Tumbleweed-Minimal-VM.aarch64-Cloud.qcow2
+  arch: aarch64
+
+provision:
+- mode: system
+  script: |
+    zypper --gpg-auto-import-keys ref
+    # tar: needed by the RKE2 tarball installer.
+    # iptables: needed by rke2-ingress-nginx-controller (executable file not found in $PATH).
+    zypper --non-interactive install -y tar iptables

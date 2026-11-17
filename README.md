@@ -27,3 +27,27 @@ The following list shows the expected tag to (example) transformation for RPM's
 | v0.2.testing.1 | Clean | `rke2-selinux-0.2-1.el7_8.noarch.rpm` | Testing ||
 | v0.2.latest.1 | Clean | `rke2-selinux-0.2-1.el7_8.noarch.rpm` | Latest ||
 | v0.2.latest.2 | Clean | `rke2-selinux-0.2-2.el7_8.noarch.rpm` | Latest ||
+
+## Development
+
+Building requires Docker with `buildx`. End-to-end tests require [Lima](https://lima-vm.io) and QEMU.
+
+| Command                      | Description                                                 |
+| :--------------------------- | :---------------------------------------------------------- |
+| `make build-<policy>`        | Build a single policy (e.g. `make build-centos9`)           |
+| `make e2e`                   | Run end-to-end tests for all policies                       |
+| `make e2e-<policy>`          | Run end-to-end tests in a VM (e.g. `make e2e-centos9`)      |
+| `make e2e-<policy>-clean`    | Delete the VM left behind by a failed run                   |
+
+Artefacts are written to `dist/<policy>/`.
+
+The end-to-end test (`hack/e2e/setup-vm.sh`) builds the policy, boots a VM from `hack/e2e/<policy>.yaml`,
+installs the RPM, installs RKE2 with `selinux: true` and checks that:
+
+- the RPM and the `rke2` module are installed and its types are known;
+- RKE2, containerd and the kubelet run as `container_runtime_t`, etcd as `rke2_service_db_t` and the
+  control-plane static pods as `rke2_service_t`;
+- RKE2 files (binaries, data dir, TLS, etcd data and snapshots, logs, CNI) have the expected labels;
+- there are no AVC denials involving `container_runtime_t` or `rke2_*` types.
+
+Use `INSTALL_RKE2_VERSION` to test against another RKE2 release (e.g. `make e2e-centos9 INSTALL_RKE2_VERSION=v1.36.6+rke2r1`).
