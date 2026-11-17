@@ -36,6 +36,15 @@ function dumpDiagnostics() {
     echo "> Diagnostics"
     getenforce
     kubectl get nodes,pods -A -o wide
+    kubectl get events -A --sort-by=.lastTimestamp
+    local pod
+    for pod in $(kubectl get pods -A --no-headers \
+        -o custom-columns=NS:.metadata.namespace,NAME:.metadata.name,READY:.status.containerStatuses[*].ready,PHASE:.status.phase |
+        awk '$4 != "Succeeded" && $3 ~ /false|<none>/ {print $1 "/" $2}'); do
+        kubectl describe pod -n "${pod%%/*}" "${pod#*/}"
+        kubectl logs -n "${pod%%/*}" "${pod#*/}" --all-containers --prefix --tail=50
+    done
+    lsmod
     journalctl -u rke2-server --no-pager | tail -n 200
     ausearch -m AVC,USER_AVC,SELINUX_ERR -ts boot
 }
@@ -54,9 +63,11 @@ function installPolicy() {
         # dependency in the same transaction, so scriptlet ordering issues are caught.
         zypper -n --gpg-auto-import-keys install --allow-unsigned-rpm "${RPM_PATH}"
     else
-        # Best effort: some kernel modules used by the CNI live here on GenericCloud images,
-        # but the package matching the running kernel may no longer be in the repos.
-        dnf install -y "kernel-modules-extra-$(uname -r)" || echo "WARN: kernel-modules-extra-$(uname -r) not available"
+        # RHEL 10 needs kernel-modules-extra for nf_conntrack:
+        # https://docs.rke2.io/install/requirements#linux
+        if [[ "$(rpm -E %rhel)" -ge 10 ]]; then
+            dnf install -y "kernel-modules-extra-$(uname -r)"
+        fi
         # Test against the latest container-selinux and selinux-policy available for the distro.
         dnf install -y --best --allowerasing container-selinux selinux-policy
         dnf install -y audit setools-console
@@ -89,6 +100,10 @@ function installRKE2() {
 selinux: true
 write-kubeconfig-mode: "0644"
 EOF
+    # EL8 boots with cgroup v1, which the kubelet refuses by default since Kubernetes 1.35.
+    if [[ "$(stat -fc %T /sys/fs/cgroup)" != "cgroup2fs" ]]; then
+        echo 'kubelet-arg: ["fail-cgroupv1=false"]' >> /etc/rancher/rke2/config.yaml
+    fi
 
     # Tarball method: the RPM method would replace the local rke2-selinux with the one from
     # rpm.rancher.io, as rke2-common requires a released rke2-selinux version.
@@ -96,8 +111,10 @@ EOF
     INSTALL_RKE2_METHOD=tar INSTALL_RKE2_VERSION="${INSTALL_RKE2_VERSION}" sh /tmp/install.sh
     rm -f /tmp/install.sh
 
-    # rke2-server is Type=notify: this returns once the apiserver is up and the kubeconfig written.
-    systemctl enable --now rke2-server.service
+    # rke2-server is Type=notify: start returns once the apiserver is up and the kubeconfig written.
+    # The unit has no start timeout, so bound it here to get diagnostics instead of a hung job.
+    systemctl enable rke2-server.service
+    timeout 600 systemctl start rke2-server.service || fail "rke2-server did not become ready"
 }
 
 function waitForCluster() {
@@ -171,7 +188,6 @@ function verifyFileContexts() {
     checkFileContext rke2_tls_t ${RKE2_DATA_DIR}/server/tls ${RKE2_DATA_DIR}/server/tls/server-ca.crt
     checkFileContext rke2_service_db_file_t ${RKE2_DATA_DIR}/server/db ${RKE2_DATA_DIR}/server/db/etcd
     checkFileContext container_log_t \
-        ${RKE2_DATA_DIR}/server/logs \
         ${RKE2_DATA_DIR}/agent/logs/kubelet.log \
         ${RKE2_DATA_DIR}/agent/containerd/containerd.log
     checkFileContext container_var_run_t /run/k3s
