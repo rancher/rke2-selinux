@@ -5,3 +5,10 @@ images:
 - location: "https://dl.rockylinux.org/pub/rocky/8.10/images/aarch64/Rocky-8-GenericCloud-Base-8.10-20240528.0.aarch64.qcow2"
   arch: "aarch64"
   digest: "sha256:946b5b9845aa5e3ed98f1bc6ee9873201712a2aef01b87731aed16857e0ca13f"
+
+provision:
+- mode: system
+  script: |
+    # iptables: needed by the portmap CNI plugin (rke2-ingress-nginx-controller hostPort), not
+    # shipped in the cloud image nor pulled in by the RKE2 tarball install.
+    dnf install -y /usr/sbin/iptables
