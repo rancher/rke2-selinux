@@ -190,12 +190,13 @@ function verifyFileContexts() {
     checkFileContext container_log_t \
         ${RKE2_DATA_DIR}/agent/logs/kubelet.log \
         ${RKE2_DATA_DIR}/agent/containerd/containerd.log
-    # The SUSE policies comment out the /run/k3s rule, leaving it to container-selinux, which has
-    # no rule for it either: it keeps the default var_run_t. Update this if either side changes.
-    if isSUSE; then
-        checkFileContext var_run_t /run/k3s
-    else
+    # Only the EL9+ policies label /run/k3s (d2d6720). The EL8 and SUSE ones comment the rule out,
+    # leaving it to container-selinux, which has no rule for it either: it keeps the default
+    # var_run_t. Update this if either side changes.
+    if ! isSUSE && [[ "$(rpm -E %rhel)" -ge 9 ]]; then
         checkFileContext container_var_run_t /run/k3s
+    else
+        checkFileContext var_run_t /run/k3s
     fi
     checkFileContext container_file_t /etc/cni /etc/cni/net.d /opt/cni /opt/cni/bin
 
