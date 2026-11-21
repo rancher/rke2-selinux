@@ -76,7 +76,8 @@ install -d %{buildroot}/etc/selinux/targeted/contexts/users/
 
 %postun
 if [ $1 -eq 0 ]; then
-    %selinux_modules_uninstall rke2
+    # posttrans installs the module with plain semodule -i, so at the default priority 400
+    %selinux_modules_uninstall -p 400 rke2
 fi;
 
 %posttrans

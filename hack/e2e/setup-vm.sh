@@ -3,7 +3,8 @@
 # End-to-end test for rke2-selinux. Runs as root inside a fresh VM (see Makefile e2e-% target):
 #   1. installs the locally built RPM from /tmp/rke2-selinux.rpm;
 #   2. installs RKE2 (tarball method) with SELinux enabled and waits for the cluster to be ready;
-#   3. verifies process and file contexts and fails on any AVC denial involving RKE2 types.
+#   3. verifies process and file contexts and fails on any AVC denial involving RKE2 types;
+#   4. removes rke2-selinux and checks that the rke2 module is gone.
 
 set -euxo pipefail
 
@@ -224,6 +225,17 @@ function verifyNoAVCs() {
     echo "No AVC denials involving RKE2 types."
 }
 
+function verifyRemoval() {
+    echo "> Verify that removing rke2-selinux removes the rke2 module"
+    systemctl stop rke2-server.service
+    rpm -e rke2-selinux
+    # The package scriptlets hide semodule errors, so check the module list directly
+    if semodule -l | awk '$1 == "rke2" {found=1} END {exit !found}'; then
+        fail "rke2 SELinux module is still loaded after removing rke2-selinux"
+    fi
+    echo "rke2 module removed."
+}
+
 function main() {
     checkSELinuxEnforcing
     installPolicy
@@ -234,6 +246,7 @@ function main() {
     verifyFileContexts
     verifyEtcdSnapshot
     verifyNoAVCs
+    verifyRemoval
 }
 
 trap 'rc=$?; if [[ ${rc} -ne 0 ]]; then dumpDiagnostics; fi; exit ${rc}' EXIT
